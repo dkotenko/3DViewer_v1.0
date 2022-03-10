@@ -2,9 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <GL/gl.h> // Библиотека OpenGL
-#include <GL/glu.h> // Библиотека GLU
 #include "cvector.h"
+#include "parser.h"
 
 #define SHOW_CONTENT 0
 #define DELIM ' '
@@ -15,68 +14,32 @@
 #define PATTERN_F "f %d/%d/%d %d/%d/%d %d/%d/%d"
 
 char dummy_s[100];
-/*
-typedef struct {
-    vec3 *v;
-    vec2 *vt;
-    vec3 *vn;
-} t_f;
-*/
 
 typedef struct {
-    vec3 vertex;
-    vec3 vn;
-    vec2 vt;
-} t_face_vertex;
-
-typedef struct {
-    vec3 *verteces;
-    vec2 *uv;
-    vec3 *normals;
-    int verteces_num;
-    int uv_num;
-    int normals_num;
-    int arr_size;
-} t_obj3d;
-
-typedef struct {
-    vec3 *verteces;
-    vec3 *normals;
-    vec2 *textures;
+    t_vec3 *verteces;
+    t_vec2 *textures;
+	t_face *faces;
 } t_obj;
-
-typedef struct {
-
-} t_face;
 
 void parse_v(char *s, t_obj *obj)
 {
-    vec3 new;
+    t_vec3 new;
 
     sscanf(s, PATTERN_V, dummy_s, &new.x, &new.y, &new.z);
-    cvector_push_back(obj->verteces, new);
+    ct_vector_push_back(obj->verteces, new);
 }
 
 void parse_vt(char *s, t_obj_pars *obj)
 {
-    vec2 new;
+    t_vec2 new;
 
     sscanf(s, PATTERN_VT, dummy_s, &new.x, &new.y);
-    cvector_push_back(obj->textures, new);
-}
-
-void parse_vn(char *s, t_obj_pars *obj)
-{
-    vec3 new;
-
-    sscanf(s, PATTERN_VN, dummy_s, &new.x, &new.y, &new.z);
-    cvector_push_back(obj->normales, new);
+    ct_vector_push_back(obj->textures, new);
 }
 
 void populate_f(t_obj_pars *obj)
 {
     t_face face;
-    
     sscanf(s, PATTERN_VN, dummy_s, &new.x, &new.y, &new.z);
 
     
@@ -141,9 +104,9 @@ t_obj t_obj_init()
     obj.verteces = NULL;
     obj.normales = NULL;
     obj.textures = NULL;
-    cvector_push_back(obj.verteces, {0,0,0});
-    cvector_push_back(obj.normales, {0,0,0});
-    cvector_push_back(obj.textures, {0,0});
+    ct_vector_push_back(obj.verteces, {0,0,0});
+    ct_vector_push_back(obj.normales, {0,0,0});
+    ct_vector_push_back(obj.textures, {0,0});
     return obj;
 }
 
