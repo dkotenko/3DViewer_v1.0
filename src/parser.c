@@ -171,9 +171,12 @@ int parse_file(char *filename, t_mesh *mesh)
         }
         parse_content(line_buf, mesh);
         free(line_buf);
+        line_buf = NULL;
         line_size = getline(&line_buf, &line_buf_size, fp);
     }
-    free(line_buf);
+    if (line_buf) {
+        free(line_buf);
+    }
     line_buf = NULL;
     fclose(fp);
 
