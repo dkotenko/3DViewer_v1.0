@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+
 #define DEBUG 0
 
 t_mesh t_mesh_init()
@@ -21,15 +22,15 @@ t_mesh t_mesh_init()
     return mesh;
 }
 
-void print_parse_result()
+void print_parse_result(t_mesh *mesh)
 {
     if (!DEBUG) {
         return ;
     }
-    printf("faces: %d\n", cvector_size(mesh.faces) - 1);
-    printf("vertices: %d\n", cvector_size(mesh.vertices) - 1);
-    printf("textures: %d\n", cvector_size(mesh.textures) - 1);
-    printf("normals: %d\n", cvector_size(mesh.normals) - 1);
+    printf("faces: %d\n", (int)cvector_size(mesh->faces) - 1);
+    printf("vertices: %d\n", (int)cvector_size(mesh->vertices) - 1);
+    printf("textures: %d\n", (int)cvector_size(mesh->textures) - 1);
+    printf("normals: %d\n", (int)cvector_size(mesh->normals) - 1);
 }
 
 void draw_mesh(t_mesh *mesh)
@@ -50,6 +51,6 @@ int main(int ac, char **av)
         exit(0);
     }
     draw_mesh(&mesh);
-    print_parse_result();
+    print_parse_result(&mesh);
     return (0);
 }

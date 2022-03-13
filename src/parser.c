@@ -109,7 +109,7 @@ void populate_f(char *s, t_mesh *mesh)
         indices = (t_vx_index *)calloc(sizeof(t_vx_index), 4);
         face.vertex_num = 4;
         if (strchr(s, '/')) {
-            sscanf(s, PATTERN_F_4, \
+            sscanf(s, PATTERN_F_4_SLASH, \
             &indices[0].vertex, &indices[0].texture, &indices[0].normal, \
             &indices[1].vertex, &indices[1].texture, &indices[1].normal, \
             &indices[2].vertex, &indices[2].texture, &indices[2].normal, \
