@@ -12,8 +12,8 @@ t_mesh t_mesh_init()
     t_mesh mesh;
 
     memset(&mesh, 0, sizeof(t_mesh));
-    t_vec3 v3 = {0,0,0};
-    t_vec2 v2 = {0,0};
+    t_vec3f v3 = {0,0,0};
+    t_vec2f v2 = {0,0};
     t_face face;
     cvector_push_back(mesh.faces, face);
     cvector_push_back(mesh.vertices, v3);

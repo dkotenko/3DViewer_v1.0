@@ -13,6 +13,7 @@ HEADERS_FILES=\
 	parser.h \
 	cvector.h \
 	scop.h \
+	vector.h \
 	# $(NAME).h
 
 SRCS_DIR=src

@@ -36,7 +36,7 @@ void skip_first(char *s, char **to_set)
 
 void parse_v(char *s, t_mesh *mesh)
 {
-    t_vec3 new;
+    t_vec3f new;
 
     sscanf(s, PATTERN_V, &new.x, &new.y, &new.z);
     cvector_push_back(mesh->vertices, new);
@@ -44,7 +44,7 @@ void parse_v(char *s, t_mesh *mesh)
 
 void parse_vn(char *s, t_mesh *mesh)
 {
-    t_vec3 new;
+    t_vec3f new;
 
     sscanf(s, PATTERN_VN, &new.x, &new.y, &new.z);
     cvector_push_back(mesh->vertices, new);
@@ -52,7 +52,7 @@ void parse_vn(char *s, t_mesh *mesh)
 
 void parse_vt(char *s, t_mesh *mesh)
 {
-    t_vec2 new;
+    t_vec2f new;
 
     sscanf(s, PATTERN_VT, &new.x, &new.y);
     cvector_push_back(mesh->textures, new);

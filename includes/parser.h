@@ -1,16 +1,7 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-typedef struct {
-	float x;
-	float y;
-} t_vec2;
-
-typedef struct {
-	float x;
-	float y;
-	float z;
-} t_vec3;
+#include "vector.h"
 
 typedef struct {
 	int vertex;
@@ -24,9 +15,9 @@ typedef struct {
 } t_face;
 
 typedef struct {
-	t_vec3 *vertices;
-	t_vec3 *normals;
-	t_vec2 *textures;
+	t_vec3f *vertices;
+	t_vec3f *normals;
+	t_vec2f *textures;
 	t_face *faces;
 	int material_index;
 } t_mesh;
@@ -47,7 +38,6 @@ typedef struct {
 } t_obj;
 
 int parse_file(char *filename, t_mesh *mesh);
-t_vec3 t_vec3_new(float x, float y, float z);
-t_vec2 t_vec2_new(float x, float y);
+
 
 #endif
