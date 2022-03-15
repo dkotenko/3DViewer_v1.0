@@ -11,25 +11,27 @@ char *read_file(char *filename)
 	fp = fopen (filename, "rb");
 	if( !fp ) {
 		perror(filename);
-		exit(1);
+		return(0);
 	} 
 
 	fseek( fp , 0L , SEEK_END);
 	lSize = ftell( fp );
 	rewind( fp );
 
-	/* allocate memory for entire content */
 	buffer = calloc( 1, lSize+1 );
-	if( !buffer ) fclose(fp),fputs("memory alloc fails",stderr),exit(1);
+	if( !buffer ) {
+		fclose(fp);
+		fputs("read_file: memory alloc fails",stderr);
+		return(0);
+	} 
 
 	/* copy the file into the buffer */
 	if(1 != fread( buffer , lSize, 1 , fp)) {
-		fclose(fp),free(buffer),fputs("entire read fails",stderr),exit(1);
+		fclose(fp);
+		free(buffer);
+		fputs("read_file: entire read fails",stderr);
+		return(0);
 	}
-	
-
-	/* do your work here, buffer is a string contains the whole text */
-
 	fclose(fp);
 	return buffer;
 }

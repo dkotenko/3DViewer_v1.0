@@ -63,6 +63,10 @@ int handle_glut(int argc, char **argv)
 
     CreateVertexBuffer();
 
+    if (compile_shaders()) {
+        fprintf(stderr, "Error: '%s'\n", "error during shader compiling");
+    }
+
     glutDisplayFunc(RenderSceneCB);
 
     glutMainLoop();

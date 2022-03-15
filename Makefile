@@ -20,7 +20,7 @@ SRCS_DIR=src
 
 SRCS_FILES_FOR_TEST=
 	
-SRCS_NOT_TEST = main.c parser.c glut.c vector.c utils.c
+SRCS_NOT_TEST = main.c parser.c glut.c vector.c utils.c shader.c
 SRCS_FILES=$(SRCS_FOR_TEST) $(SRCS_NOT_TEST)
 
 
@@ -56,8 +56,11 @@ CC_GCOV=gcc -Wall -Wextra -Werror -std=c11 \
 -fcf-protection=full -static-libgcc --coverage -lgcov
 THREADS = 8
 
-all:
+export MESA_GL_VERSION_OVERRIDE=3.3
+
+all: 
 	$(MAKE) -j$(THREADS) $(NAME)
+	
 
 gcov_report: CC=$(CC_GCOV)
 gcov_report: fclean test
