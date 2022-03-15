@@ -2,5 +2,5 @@
 #define SCOP_H
 
 char *read_file(char *filename);
-
+int handle_glut(int ac, char **av);
 #endif

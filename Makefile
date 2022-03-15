@@ -5,7 +5,7 @@ COLOR_GREEN="\033[0;32m"
 COLOR_YELLOW="\033[0;33m"
 COLOR_RESET="\033[0m"
 
-NAME=scop
+NAME=3DViewer
 VERSION=V1.0
 ARCHIVE_NAME=$(NAME)-$(VERSION).tar.gz
 HEADERS_DIR = includes
@@ -20,7 +20,7 @@ SRCS_DIR=src
 
 SRCS_FILES_FOR_TEST=
 	
-SRCS_NOT_TEST = main.c parser.c
+SRCS_NOT_TEST = main.c parser.c glut.c vector.c utils.c
 SRCS_FILES=$(SRCS_FOR_TEST) $(SRCS_NOT_TEST)
 
 
@@ -45,7 +45,12 @@ TEST_OBJS=$(TEST_SRCS:%.c=%.o)
 
 REPORT_NAME=report.html
 
-FLAGS=-std=c11 -Wall -Wextra -Werror -pedantic `sdl2-config --libs` -lGL -lm -O3 -g
+
+FLAGS:=-lGLEW -lGLU -lGL -lglut
+FLAGS:=$(FLAGS) -std=c11
+FLAGS:=$(FLAGS) -Wall -Wextra -Werror
+FLAGS:=$(FLAGS) -pedantic -lGL -lm -O3 -g
+
 CC=gcc 
 CC_GCOV=gcc -Wall -Wextra -Werror -std=c11 \
 -fcf-protection=full -static-libgcc --coverage -lgcov
@@ -95,7 +100,7 @@ $(TEST_DIR)/%.o:$(TEST_DIR)/%.c $(TEST_INCLUDES)
 	$(CC) -I./$(TEST_DIR)/includes -I./includes -c $< -o $@
 
 $(NAME): $(OBJ)
-	$(CC) $(OBJ) -o $@ $(FLAGS)
+	$(CC) $(OBJ) $(FLAGS) -o $@
 	
 	@echo -n $(COLOR_GREEN)
 	@echo =================================

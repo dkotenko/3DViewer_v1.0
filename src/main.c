@@ -40,17 +40,22 @@ void draw_mesh(t_mesh *mesh)
 
 int main(int ac, char **av)
 {
+    /*
     if (ac < 2) {
         printf("No files provided: pass .obj file as argument\n");
         exit(0);
     }
+    */
 
-    t_mesh mesh = t_mesh_init();
-    if (parse_file(av[1], &mesh) == EXIT_FAILURE) {
-        printf("parsing error\n");
-        exit(0);
+    if (ac > 1) {
+       t_mesh mesh = t_mesh_init();
+        if (parse_file(av[1], &mesh) == EXIT_FAILURE) {
+            printf("parsing error\n");
+            exit(0);
+        }
+        draw_mesh(&mesh);
+        print_parse_result(&mesh);
     }
-    draw_mesh(&mesh);
-    print_parse_result(&mesh);
+    handle_glut(ac, av);
     return (0);
 }

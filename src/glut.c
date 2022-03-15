@@ -2,6 +2,7 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include "vector.h"
+#include "scop.h"
 
 GLuint VBO;
 
@@ -37,7 +38,7 @@ static void CreateVertexBuffer()
 }
 
 
-int main(int argc, char** argv)
+int handle_glut(int argc, char **argv)
 {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA);
