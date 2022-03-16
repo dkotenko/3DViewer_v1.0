@@ -2,15 +2,15 @@
 #include <math.h>
 #include <stdio.h>
 
-static double **inverse(double **src, int size)
+static float **inverse(float **src, int size)
 {
 	
 	int i,j,k,n;
 
 	n = size;
 
-    double a[(n * 2) + 1][(n * 2) + 1];
-    double ratio;
+    float a[(n * 2) + 1][(n * 2) + 1];
+    float ratio;
     
     
     for(i=1;i<=n;i++)
@@ -69,7 +69,7 @@ static double **inverse(double **src, int size)
     }
 
     
-    double **matrix = s21_create_matrix_array(size, size);
+    float **matrix = s21_create_matrix_array(size, size);
     int m = 0;
     int p;
     
@@ -92,7 +92,7 @@ matrix_t s21_inverse_matrix(matrix_t *A)
 		return s21_get_incorrect_matrix();
 	}
     matrix_t inverse_matrix = s21_create_matrix(A->rows, A->columns);
-    double **inverse_array = inverse(A->matrix, A->rows);
+    float **inverse_array = inverse(A->matrix, A->rows);
     if (!inverse_array) {
         return s21_get_incorrect_matrix();
     }

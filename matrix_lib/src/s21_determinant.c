@@ -4,7 +4,7 @@
 /*
 ** B[m][n]
 */ 
-double s21_determinant_array(double **B, int m, int n) {
+float s21_determinant_array(float **B, int m, int n) {
     int row_size = m;
     int column_size = n;
 
@@ -20,7 +20,7 @@ double s21_determinant_array(double **B, int m, int n) {
 
     else {
         int malloc_size = row_size - 1;
-        double **minor = s21_create_matrix_array(malloc_size, malloc_size); //[row_size-1][column_size-1];
+        float **minor = s21_create_matrix_array(malloc_size, malloc_size); //[row_size-1][column_size-1];
         if (!minor) {
             NAN;
         }
@@ -67,7 +67,7 @@ double s21_determinant_array(double **B, int m, int n) {
     }
 }
 
-double s21_determinant(matrix_t *A)
+float s21_determinant(matrix_t *A)
 {
 	if (A->rows != A->columns || A->rows < 1 || A->columns < 1) {
 		return NAN;

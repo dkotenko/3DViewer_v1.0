@@ -4,6 +4,8 @@
 #include <string.h>
 #include "scop.h"
 
+extern GLint gTranslationLocation;
+
 static void add_shader(GLuint shader_program, const char* pShaderText, GLenum ShaderType)
 {
     GLuint ShaderObj = glCreateShader(ShaderType);
@@ -72,6 +74,12 @@ int compile_shaders()
     if (Success == 0) {
         glGetProgramInfoLog(shader_program, sizeof(ErrorLog), NULL, ErrorLog);
         fprintf(stderr, "Error linking shader program: '%s'\n", ErrorLog);
+        return (1);
+    }
+
+    gTranslationLocation = glGetUniformLocation(shader_program, "gTranslation");
+    if (gTranslationLocation == -1) {
+        printf("Error getting uniform location of 'gTranslation'\n");
         return (1);
     }
 

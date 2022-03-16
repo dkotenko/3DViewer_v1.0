@@ -3,6 +3,7 @@
 #include "cvector.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "s21_matrix.h"
 
 
 #define DEBUG 0

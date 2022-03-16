@@ -1,6 +1,6 @@
 #include "s21_matrix.h"
 
-matrix_t s21_mult_number(matrix_t *A, double number)
+matrix_t s21_mult_number(matrix_t *A, float number)
 {
 	if (A->rows < 1 || A->columns < 1) {
 		return s21_get_incorrect_matrix();

@@ -1,13 +1,29 @@
 #!/usr/bin/make -f
 
+######### COLOR #############
 COLOR_RED="\033[0;31m"
 COLOR_GREEN="\033[0;32m"
 COLOR_YELLOW="\033[0;33m"
 COLOR_RESET="\033[0m"
+#############################
 
+######### APP ###############
 NAME=3DViewer
 VERSION=V1.0
 ARCHIVE_NAME=$(NAME)-$(VERSION).tar.gz
+#############################
+
+######### MATRIX LIB ########
+MATRIX_LIB_NAME = s21_matrix.a
+MATRIX_LIB_DIR = ./matrix_lib/
+MATRIX_LIB_FILE = $(MATRIX_LIB_DIR)$(MATRIX_LIB_NAME)
+MATRIX_LIB = -L $(MATRIX_LIB_DIR) -l:s21_matrix.a
+MATRIX_HEADERS_FILES=\
+	s21_matrix.h
+#############################
+
+######### INCLUDES ##########
+HEADERS_MATRIX_LIB_DIR = $(MATRIX_LIB_DIR)includes
 HEADERS_DIR = includes
 HEADERS_FILES=\
 	parser.h \
@@ -15,31 +31,35 @@ HEADERS_FILES=\
 	scop.h \
 	vector.h \
 	# $(NAME).h
+#############################
 
+
+
+######### SRCS ##############
 SRCS_DIR=src
-
 SRCS_FILES_FOR_TEST=
-	
 SRCS_NOT_TEST = main.c parser.c glut.c vector.c utils.c shader.c
 SRCS_FILES=$(SRCS_FOR_TEST) $(SRCS_NOT_TEST)
+#############################
 
 
 SRCS_FOR_TEST=$(addprefix $(SRCS_DIR)/, $(SRCS_FILES_FOR_TEST))
 SRCS=$(SRCS_FOR_TEST) $(addprefix $(SRCS_DIR)/, $(SRCS_NOT_TEST))
 
 HEADERS = $(addprefix $(HEADERS_DIR)/, $(HEADERS_FILES))
+MATRIX_LIB_HEADERS = $(addprefix $(HEADERS_MATRIX_LIB_DIR)/, $(MATRIX_HEADERS_FILES))
 OBJ=$(SRCS:.c=.o)
 OBJ_FOR_TEST=$(SRCS_FOR_TEST:.c=.o)
 INCLUDES=-I./includes
+MATRIX_LIB_INCLUDES=-I.$(MATRIX_LIB_DIR)includes
 TEST_INCLUDES_DIR=tests/includes
 TEST_INCLUDES=$(TEST_INCLUDES_DIR)/tests.h
 
 TEST_DIR=tests
 TEST_NAME=test.out
-TEST_FILES=test_calculation.c \
-		test_main.c \
-		test_deposit.c \
-		test_credit.c
+TEST_LIB_LINKS =  -lcheck -lm -lpthread -lrt -lsubunit
+TEST_FILES= \
+		test_main.c
 TEST_SRCS=$(addprefix $(TEST_DIR)/$(SRCS_DIR)/, $(TEST_FILES))
 TEST_OBJS=$(TEST_SRCS:%.c=%.o)
 
@@ -58,10 +78,10 @@ THREADS = 8
 
 export MESA_GL_VERSION_OVERRIDE=3.3
 
-all: 
+all:
+	$(MAKE) -sC $(MATRIX_LIB_DIR)
 	$(MAKE) -j$(THREADS) $(NAME)
 	
-
 gcov_report: CC=$(CC_GCOV)
 gcov_report: fclean test
 	./$(TEST_NAME)
@@ -97,13 +117,13 @@ dvi:
 	./scripts/make_dvi.sh
 
 $(TEST_NAME): $(NAME) $(TEST_OBJS)
-	$(CC) $(TEST_OBJS) $(OBJ_FOR_TEST) -o $@ -lcheck -lm -lpthread -lrt -lsubunit
+	$(CC) $(MATRIX_LIB_FILE) $(TEST_OBJS) $(OBJ_FOR_TEST) -o $@ $(TEST_LIB_LINKS) $(MATRIX_LIB)
 
 $(TEST_DIR)/%.o:$(TEST_DIR)/%.c $(TEST_INCLUDES)
 	$(CC) -I./$(TEST_DIR)/includes -I./includes -c $< -o $@
 
 $(NAME): $(OBJ)
-	$(CC) $(OBJ) $(FLAGS) -o $@
+	$(CC) $(MATRIX_LIB_FILE) $(OBJ) $(FLAGS) -o $@ $(MATRIX_LIB)
 	
 	@echo -n $(COLOR_GREEN)
 	@echo =================================
@@ -111,13 +131,14 @@ $(NAME): $(OBJ)
 	@echo =================================	
 	@echo -n $(COLOR_RESET)
 
-%.o:%.c $(HEADERS)
-	@$(CC) $(INCLUDES) -c $< -o $@
+%.o:%.c $(HEADERS) $(MATRIX_LIB_HEADERS)
+	@$(CC) $(INCLUDES) $(MATRIX_LIB_INCLUDES) -c $< -o $@
 	@echo $<
 
 
 		
 clean:
+	$(MAKE) -sC $(MATRIX_LIB_DIR) clean
 	/bin/rm -f $(OBJ)
 	/bin/rm -f $(TEST_OBJS)
 	find . -name "*.gcda" -type f -delete
@@ -125,6 +146,7 @@ clean:
 	/bin/rm -f $(REPORT_NAME)
 	/bin/rm -f report.* plot.txt
 fclean: clean
+	$(MAKE) -sC $(MATRIX_LIB_DIR) fclean
 	/bin/rm -f $(NAME)
 	/bin/rm -f $(TEST_NAME)
 distclean: fclean

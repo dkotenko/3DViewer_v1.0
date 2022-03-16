@@ -1,15 +1,15 @@
 #include "s21_matrix.h"
 
-double **s21_create_matrix_array(int rows, int columns)
+float **s21_create_matrix_array(int rows, int columns)
 {
-	double **matrix;
+	float **matrix;
 	
-	matrix = malloc(sizeof(double *) * rows);
+	matrix = malloc(sizeof(float *) * rows);
 	if (!matrix) {
 		return NULL;
 	}
 	for (int i = 0; i < columns; i++) {
-		matrix[i] = calloc(columns, sizeof(double));
+		matrix[i] = calloc(columns, sizeof(float));
 		if (!matrix[i]) {
 			s21_free_matrix_array(matrix, i);
 			return NULL;

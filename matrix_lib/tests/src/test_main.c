@@ -12,7 +12,7 @@ void print_matrix(matrix_t m)
     }
 }
 
-void populate_matrix(double **arr, matrix_t *m)
+void populate_matrix(float **arr, matrix_t *m)
 {
     for (int i = 0; i < m->rows; i++) {
         for (int j = 0; j < m->columns; j++) {
@@ -23,8 +23,8 @@ void populate_matrix(double **arr, matrix_t *m)
 
 void init_matrixes_3x3(matrix_t *A, matrix_t *B)
 {   
-	double m1[3][3] = {{1, 2, 3}, {4, 5, 6}, {7,8,9}};
-	double m2[3][3] = {{1,1,1},{1,1,1},{1,1,1}};
+	float m1[3][3] = {{1, 2, 3}, {4, 5, 6}, {7,8,9}};
+	float m2[3][3] = {{1,1,1},{1,1,1},{1,1,1}};
     
 	*A = s21_create_matrix(3, 3);
 	*B = s21_create_matrix(3, 3);

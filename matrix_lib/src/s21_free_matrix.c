@@ -6,7 +6,7 @@ void s21_free_matrix(matrix_t *matrix, int i)
     matrix->matrix = NULL;
 }
 
-void s21_free_matrix_array(double **matrix, int i)
+void s21_free_matrix_array(float **matrix, int i)
 {
 	while (--i > -1) {
 		free(matrix[i]);

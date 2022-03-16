@@ -1,7 +1,7 @@
 #include "tests.h"
 #include <math.h>
 
-double test_s21_determinant(matrix_t *A)
+float test_s21_determinant(matrix_t *A)
 {
 	if (A->rows != A->columns || A->rows < 1 || A->columns < 1) {
 		return NAN;
@@ -12,7 +12,7 @@ double test_s21_determinant(matrix_t *A)
 
 START_TEST(test_determ_invalid) {
 	matrix_t m = s21_create_matrix(2,2);
-	double determinant = 0;
+	float determinant = 0;
 
 	m.rows = 0;
 	determinant = s21_determinant(&m);

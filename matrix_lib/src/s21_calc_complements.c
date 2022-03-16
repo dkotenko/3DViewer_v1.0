@@ -1,7 +1,7 @@
 #include "s21_matrix.h"
 #include <math.h>
 
-static void s21_populate_minor(double **src, double **dest,  int row, int column, int a_size)
+static void s21_populate_minor(float **src, float **dest,  int row, int column, int a_size)
 {
     int k = 0;
     int m;
@@ -28,7 +28,7 @@ matrix_t s21_calc_complements(matrix_t *A)
 		return s21_get_incorrect_matrix();
 	}
     int n = A->rows;
-    double **temp_minor = s21_create_matrix_array(n - 1, n - 1);
+    float **temp_minor = s21_create_matrix_array(n - 1, n - 1);
     matrix_t complements_matrix = s21_create_matrix(n, n);
 
     for (int i = 0; i < n; i++) {

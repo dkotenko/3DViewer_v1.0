@@ -40,7 +40,7 @@ START_TEST(test_sum_correct) {
 
 	matrix_t sum = s21_sum_matrix(&A, &B);
 	matrix_t m_result = s21_create_matrix(3,3);
-	double result[3][3] = {{2,3,4}, {5,6,7}, {8,9,10}};
+	float result[3][3] = {{2,3,4}, {5,6,7}, {8,9,10}};
 	
 	for (int i = 0; i < m_result.rows; i++) {
         for (int j = 0; j < m_result.columns; j++) {

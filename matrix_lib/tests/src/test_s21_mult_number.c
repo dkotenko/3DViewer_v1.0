@@ -21,7 +21,7 @@ START_TEST(test_mult_number_correct) {
 
 	matrix_t mult = s21_mult_number(&A, 2);
 	matrix_t m_result = s21_create_matrix(3,3);
-	double result[3][3] = {{2,4,6}, {8,10,12}, {14,16,18}};
+	float result[3][3] = {{2,4,6}, {8,10,12}, {14,16,18}};
 	
 	for (int i = 0; i < m_result.rows; i++) {
         for (int j = 0; j < m_result.columns; j++) {
