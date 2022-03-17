@@ -8,8 +8,8 @@ void s21_free_matrix(matrix_t *matrix, int i)
 
 void s21_free_matrix_array(float **matrix, int i)
 {
+	free(matrix[0]);
 	while (--i > -1) {
-		free(matrix[i]);
         matrix[i] = NULL;
 	}
 	free(matrix);

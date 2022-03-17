@@ -52,7 +52,7 @@ void set_rotateInfo_vec3f(t_pipeline *p, t_vec3f v)
     p->m_rotateInfo = v;
 }
 
-void set_PerspectiveProj(t_pipeline *p, PersProjInfo *proj)
+void set_PerspectiveProj(t_pipeline *p, PersProjInfo proj)
 {
     p->m_persProjInfo = proj;
 }

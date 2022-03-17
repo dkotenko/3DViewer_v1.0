@@ -10,9 +10,11 @@
 #define WINDOW_HEIGHT 480
 
 GLuint VBO;
-GLint gTranslationLocation;
+GLuint IBO;
+GLuint gWVPLocation;
+
+t_camera *pGameCamera = NULL;
 PersProjInfo gPersProjInfo;
-Camera* pGameCamera = NULL;
 
 static void RenderSceneCB()
 {
@@ -24,13 +26,12 @@ static void RenderSceneCB()
     scale += delta;
 
     Pipeline p;
-    p.Rotate(0.0f, Scale, 0.0f);
-    p.WorldPos(0.0f, 0.0f, 3.0f);
-    p.SetCamera(*pGameCamera);
-    p.SetPerspectiveProj(gPersProjInfo);
+    set_rotateInfo(&p, 0.0f, Scale, 0.0f);
+    set_WorldPos_3f(&p, 0.0f, 0.0f, 3.0f);
+    set_camera(&p, pGameCamera);
+    set_PerspectiveProj(&p, gPersProjInfo);
     
-     glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, (const GLfloat*)p.GetWVPTrans());
-
+    glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, (const GLfloat*)p.m_WVPtransformation.matrix);
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -41,6 +42,12 @@ static void RenderSceneCB()
     glDisableVertexAttribArray(0);
 
     glutSwapBuffers();
+}
+
+static void _SpecialKeyboardCB(int Key, int x, int y)
+{
+    OGLDEV_KEY OgldevKey = GLUTKeyToOGLDEVKey(Key);
+    pGameCamera->OnKeyboard(OgldevKey);
 }
 
 
