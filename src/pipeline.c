@@ -1,4 +1,5 @@
 #include "scop.h"
+#include "s21_matrix.h"
 
 t_pipeline t_pipeline_new()
 {
@@ -87,3 +88,16 @@ void set_orient_WorldTrans(t_pipeline *p, WorldTrans *w)
     p->m_worldPos = w->GetRotation;
     p->m_rotateInfo = w->GetPos;
 }
+
+GetWorldTrans
+
+float *get_WVPtransformation(t_pipeline *p)
+{
+    GetWorldTrans();
+    GetVPTrans();
+
+    p->m_WVPtransformation = s21_mult_matrix(&m_VPtransformation, m_Wtransformation);
+    return p->m_WVPtransformation.matrix;
+}
+
+
