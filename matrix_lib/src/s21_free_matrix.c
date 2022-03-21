@@ -9,7 +9,7 @@ void s21_free_matrix(matrix_t *matrix, int i)
 	}
 }
 
-void s21_free_arr_array(float **arr, int i)
+void s21_free_matrix_array(float **arr, int i)
 {
 	if (arr) {
 		if (arr[0]) {

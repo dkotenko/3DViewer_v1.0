@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "scop.h"
-
-extern GLint gTranslationLocation;
+extern GLuint gWVPLocation;
+GLint gTranslationLocation;
 
 static void add_shader(GLuint shader_program, const char* pShaderText, GLenum ShaderType)
 {
@@ -38,9 +38,6 @@ static void add_shader(GLuint shader_program, const char* pShaderText, GLenum Sh
     glAttachShader(shader_program, ShaderObj);
 }
 
-const char* vs_file = "shaders/shader.vs";
-const char* fs_file = "shaders/shader.fs";
-
 int compile_shaders()
 {
     GLuint shader_program = glCreateProgram();
@@ -49,6 +46,9 @@ int compile_shaders()
         fprintf(stderr, "Error creating shader program\n");
         exit(1);
     }
+
+    const char* vs_file = "shaders/shader.vs";
+    const char* fs_file = "shaders/shader.fs";
 
     char *vs;
     char *fs;
@@ -92,5 +92,6 @@ int compile_shaders()
     }
 
     glUseProgram(shader_program);
+    gWVPLocation = glGetUniformLocation(shader_program, "gWVP");
     return (0);
 }

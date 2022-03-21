@@ -13,25 +13,24 @@ GLuint VBO;
 GLuint IBO;
 GLuint gWVPLocation;
 
-t_camera *pGameCamera = NULL;
+t_camera *pGameCamera;
 PersProjInfo gPersProjInfo;
+t_pipeline *p;
 
 static void RenderSceneCB()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
     static float scale = 0.0f;
-    static float delta = 0.01f;
+    static float delta = 0.1f;
     scale += delta;
-    
 
-    t_pipeline p;
-    set_rotateInfo(&p, 0.0f, scale, 0.0f);
-    set_WorldPos_3f(&p, 0.0f, 0.0f, 3.0f);
-    set_camera(&p, pGameCamera);
-    set_PerspectiveProj(&p, gPersProjInfo);
+    set_rotateInfo(p, 0.0f, scale, 0.0f);
+    set_WorldPos_3f(p, 0.0f, 0.0f, 3.0f);
+    set_camera(p, pGameCamera);
+    set_PerspectiveProj(p, gPersProjInfo);
     
-    glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, (const GLfloat*)GetWVPTrans(&p));
+    glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, (const GLfloat*)GetWVPTrans(p));
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -46,8 +45,10 @@ static void RenderSceneCB()
 
 static void SpecialKeyboardCB(int Key, int x, int y)
 {
-    OGLDEV_KEY OgldevKey = GLUTKeyToOGLDEVKey(Key);
-    pGameCamera->OnKeyboard(OgldevKey);
+    //OGLDEV_KEY OgldevKey = GLUTKeyToOGLDEVKey(Key);
+    //pGameCamera->OnKeyboard(Key);
+    printf("key_num:%d x:%d y:%d\n");
+    
 }
 
 
@@ -91,9 +92,18 @@ int handle_glut(int argc, char **argv)
     glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     glutInitWindowPosition(100, 100);
     int win = glutCreateWindow("3DViewer_V1.0");
+    
+    gPersProjInfo.FOV = 60.0f;
+    gPersProjInfo.Height = WINDOW_HEIGHT;
+    gPersProjInfo.Width = WINDOW_WIDTH;
+    gPersProjInfo.zNear = 1.0f;
+    gPersProjInfo.zFar = 100.0f;
+    
 
+    p = t_pipeline_new();
     InitializeGlutCallbacks();
-    t_camera *camera = t_camera_new(WINDOW_WIDTH, WINDOW_HEIGHT);
+    pGameCamera = t_camera_new(WINDOW_WIDTH, WINDOW_HEIGHT);
+    
     // Must be done after glut is initialized!
     GLenum res = glewInit();
     if (res != GLEW_OK) {
@@ -101,8 +111,7 @@ int handle_glut(int argc, char **argv)
         return 1;
     }
 
-    GLclampf Red = 0.0f, Green = 0.0f, Blue = 0.0f, Alpha = 0.0f;
-    glClearColor(Red, Green, Blue, Alpha);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     CreateVertexBuffer();
     CreateIndexBuffer();
@@ -110,15 +119,7 @@ int handle_glut(int argc, char **argv)
     if (compile_shaders()) {
         fprintf(stderr, "%s\n", "Error during shader compiling");
     }
-
-    gPersProjInfo.FOV = 60.0f;
-    gPersProjInfo.Height = WINDOW_HEIGHT;
-    gPersProjInfo.Width = WINDOW_WIDTH;
-    gPersProjInfo.zNear = 1.0f;
-    gPersProjInfo.zFar = 100.0f;
-
-
     glutMainLoop();
-    t_camera_free(camera);
+    t_camera_free(pGameCamera);
     return 0;
 }

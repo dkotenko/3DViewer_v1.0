@@ -5,7 +5,9 @@
 #include "s21_matrix.h"
 
 typedef struct {
-
+    t_vec3f Pos;
+    t_vec3f Target;
+    t_vec3f Up;
 } t_camera;
 
 typedef struct 
@@ -30,8 +32,8 @@ typedef struct
 typedef struct 
 {
     t_vec3f m_scale;
-    t_vec3f m_rotation;
-    t_vec3f m_pos;
+    t_vec3f m_rotateInfo;
+    t_vec3f m_worldPos;
 } t_orientation;
 
 typedef struct {
@@ -63,7 +65,8 @@ void t_camera_free(t_camera *camera);
 /*
 ** pipeline.c
 */
-t_pipeline t_pipeline_new();
+t_pipeline *t_pipeline_new();
+t_pipeline t_pipeline_init();
 void set_scale_3f(t_pipeline *p, float x, float y, float z);
 void set_scale_f(t_pipeline *p, float f);
 void set_scale_vec3f(t_pipeline *p, t_vec3f v);
@@ -80,8 +83,8 @@ void set_orient(t_pipeline *p, t_orientation o);
 matrix_t GetWorldTrans(t_pipeline p);
 matrix_t GetViewTrans(t_pipeline *p);
 matrix_t GetProjTrans(t_pipeline *p);
-void GetVPTrans(t_pipeline *p);
-matrix_t GetWVPTrans(t_pipeline *p);
+matrix_t GetVPTrans(t_pipeline *p);
+float *GetWVPTrans(t_pipeline *p);
 
 /*
 ** math.c
