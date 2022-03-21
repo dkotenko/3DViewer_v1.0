@@ -1,9 +1,14 @@
 #include "scop.h"
 #include <math.h>
+#include "s21_matrix.h"
+#include "vector.h"
 
-void InitRotationX(matrix_t *m, float x)
+#define ToRadian(x) (float)(((x) * M_PI / 180.0f))
+#define ToDegree(x) (float)(((x) * 180.0f / M_PI))
+
+void InitRotationX(matrix_t *ScaleTrans, float x)
 {
-    float **m = ScaleTrans.matrix;
+    float **m = ScaleTrans->matrix;
     
     m[0][0] = 1.0f; m[0][1] = 0.0f   ; m[0][2] = 0.0f    ; m[0][3] = 0.0f;
     m[1][0] = 0.0f; m[1][1] = cosf(x); m[1][2] = -sinf(x); m[1][3] = 0.0f;
@@ -12,7 +17,7 @@ void InitRotationX(matrix_t *m, float x)
 }
 
 
-void InitRotationY(matrix_t matrix, float y)
+void InitRotationY(matrix_t ScaleTrans, float y)
 {
     float **m = ScaleTrans.matrix;
 
@@ -23,7 +28,7 @@ void InitRotationY(matrix_t matrix, float y)
 }
 
 
-void InitRotationZ(matrix_t matrix, float z)
+void InitRotationZ(matrix_t ScaleTrans, float z)
 {
     float **m = ScaleTrans.matrix;
 
@@ -33,7 +38,7 @@ void InitRotationZ(matrix_t matrix, float z)
     m[3][0] = 0.0f   ; m[3][1] = 0.0f    ; m[3][2] = 0.0f; m[3][3] = 1.0f;
 }
 
-void InitScaleTransform(matrix_t matrix, float ScaleX, float ScaleY, float ScaleZ)
+void InitScaleTransform(matrix_t ScaleTrans, float ScaleX, float ScaleY, float ScaleZ)
 {
     float **m = ScaleTrans.matrix;
 
@@ -73,7 +78,7 @@ void InitTranslationTransform(matrix_t *matrix, float x, float y, float z)
     m[3][0] = 0.0f; m[3][1] = 0.0f; m[3][2] = 0.0f; m[3][3] = 1.0f;
 }
 
-void InitOrthoProjTransform(const OrthoProjInfo& p)
+void InitOrthoProjTransform(matrix_t matrix, OrthoProjInfo p)
 {
     float l = p.l;
     float r = p.r;
@@ -82,13 +87,28 @@ void InitOrthoProjTransform(const OrthoProjInfo& p)
     float n = p.n;
     float f = p.f;
 
+    float **m = matrix.matrix;
+
     m[0][0] = 2.0f/(r - l); m[0][1] = 0.0f;         m[0][2] = 0.0f;         m[0][3] = -(r + l)/(r - l);
     m[1][0] = 0.0f;         m[1][1] = 2.0f/(t - b); m[1][2] = 0.0f;         m[1][3] = -(t + b)/(t - b);
     m[2][0] = 0.0f;         m[2][1] = 0.0f;         m[2][2] = 2.0f/(f - n); m[2][3] = -(f + n)/(f - n);
     m[3][0] = 0.0f;         m[3][1] = 0.0f;         m[3][2] = 0.0f;         m[3][3] = 1.0;
 }
 
-void InitTranslationTransform(t_matrix CameraTranslationTrans, float x, float y, float z)
+void InitPersProjTransform(matrix_t ProjTransformation, PersProjInfo p)
+{
+    float **m = ProjTransformation.matrix;
+    const float ar         = p.Width / p.Height;
+    const float zRange     = p.zNear - p.zFar;
+    const float tanHalfFOV = tanf(ToRadian(p.FOV / 2.0f));
+
+    m[0][0] = 1.0f/(tanHalfFOV * ar); m[0][1] = 0.0f;            m[0][2] = 0.0f;                        m[0][3] = 0.0;
+    m[1][0] = 0.0f;                   m[1][1] = 1.0f/tanHalfFOV; m[1][2] = 0.0f;                        m[1][3] = 0.0;
+    m[2][0] = 0.0f;                   m[2][1] = 0.0f;            m[2][2] = (-p.zNear - p.zFar)/zRange ; m[2][3] = 2.0f*p.zFar*p.zNear/zRange;
+    m[3][0] = 0.0f;                   m[3][1] = 0.0f;            m[3][2] = 1.0f;                        m[3][3] = 0.0;
+}
+
+void InitTranslationTransform(matrix_t CameraTranslationTrans, float x, float y, float z)
 {
     float **m = CameraTranslationTrans.matrix;
 
@@ -98,16 +118,17 @@ void InitTranslationTransform(t_matrix CameraTranslationTrans, float x, float y,
     m[3][0] = 0.0f; m[3][1] = 0.0f; m[3][2] = 0.0f; m[3][3] = 1.0f;
 }
 
-void InitTranslationTransform_vec3d(t_matrix CameraTranslationTrans, const t_vec3f Pos)
+void InitTranslationTransform_vec3d(matrix_t CameraTranslationTrans, const t_vec3f Pos)
 {
     InitTranslationTransform(CameraTranslationTrans, Pos.x, Pos.y, Pos.z);
 }
 
-void InitCameraTransform(const t_vec3f Target, const t_vec3f Up)
+void InitCameraTransform_2v(matrix_t *CameraRotateTrans, const t_vec3f Target, const t_vec3f Up)
 {
     Vector3f N = Normalize(Target);
     Vector3f U = Cross(Up, N);
     U = Normalize(U);
+    float **m = CameraRotateTrans->matrix;
 
     Vector3f V = Cross(N, U);
 
@@ -118,13 +139,13 @@ void InitCameraTransform(const t_vec3f Target, const t_vec3f Up)
 }
 
 
-void InitCameraTransform(matrix_t *CameraRotateTrans, t_vec3f Pos, t_vec3f Target, t_vec3f Up)
+void InitCameraTransform_3v(matrix_t *CameraRotateTrans, t_vec3f Pos, t_vec3f Target, t_vec3f Up)
 {
-    Matrix4f CameraTranslation = s21_matrix_create(4, 4);
+    matrix_t CameraTranslation = s21_matrix_create(4, 4);
     InitTranslationTransform(CameraTranslation, -Pos.x, -Pos.y, -Pos.z);
 
-    Matrix4f CameraRotateTrans = s21_matrix_create(4, 4);
-    InitCameraTransform(CameraRotateTrans, Target, Up);
+    matrix_t CameraRotateTrans = s21_matrix_create(4, 4);
+    InitCameraTransform_2v(CameraRotateTrans, Target, Up);
 
     *CameraRotateTrans = s21_mult_matrix(CameraRotateTrans, CameraTranslation);
 }
@@ -155,3 +176,5 @@ t_vec3f Normalize(t_vec3f v)
 
     return norm;
 }
+
+ToRadian

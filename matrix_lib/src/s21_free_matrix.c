@@ -2,15 +2,22 @@
 
 void s21_free_matrix(matrix_t *matrix, int i)
 {
-	s21_free_matrix_array(matrix->matrix, i);
-    matrix->matrix = NULL;
+	if (matrix) {
+		s21_free_matrix_array(matrix->matrix, i);
+    	matrix->matrix = NULL;
+		free(matrix);
+	}
 }
 
-void s21_free_matrix_array(float **matrix, int i)
+void s21_free_arr_array(float **arr, int i)
 {
-	free(matrix[0]);
-	while (--i > -1) {
-        matrix[i] = NULL;
+	if (arr) {
+		if (arr[0]) {
+			free(arr[0]);
+		}
+		while (--i > -1) {
+			arr[i] = NULL;
+		}
+		free(arr);
 	}
-	free(matrix);
 }

@@ -22,16 +22,16 @@ static void RenderSceneCB()
 
     static float scale = 0.0f;
     static float delta = 0.01f;
-
     scale += delta;
+    
 
-    Pipeline p;
-    set_rotateInfo(&p, 0.0f, Scale, 0.0f);
+    t_pipeline p;
+    set_rotateInfo(&p, 0.0f, scale, 0.0f);
     set_WorldPos_3f(&p, 0.0f, 0.0f, 3.0f);
     set_camera(&p, pGameCamera);
     set_PerspectiveProj(&p, gPersProjInfo);
     
-    glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, (const GLfloat*)get_WVPtransformation(p);
+    glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, (const GLfloat*)GetWVPTrans(&p));
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -44,7 +44,7 @@ static void RenderSceneCB()
     glutSwapBuffers();
 }
 
-static void _SpecialKeyboardCB(int Key, int x, int y)
+static void SpecialKeyboardCB(int Key, int x, int y)
 {
     OGLDEV_KEY OgldevKey = GLUTKeyToOGLDEVKey(Key);
     pGameCamera->OnKeyboard(OgldevKey);
@@ -78,9 +78,9 @@ static void CreateIndexBuffer()
 
 static void InitializeGlutCallbacks()
 {
-    glutDisplayFunc(_RenderSceneCB);
-    glutIdleFunc(_RenderSceneCB);
-    glutSpecialFunc(_SpecialKeyboardCB);
+    glutDisplayFunc(RenderSceneCB);
+    glutIdleFunc(RenderSceneCB);
+    glutSpecialFunc(SpecialKeyboardCB);
 }
 
 
@@ -93,7 +93,7 @@ int handle_glut(int argc, char **argv)
     int win = glutCreateWindow("3DViewer_V1.0");
 
     InitializeGlutCallbacks();
-    t_camera *camera = t_camera_create(WINDOW_WIDTH, WINDOW_HEIGHT);
+    t_camera *camera = t_camera_new(WINDOW_WIDTH, WINDOW_HEIGHT);
     // Must be done after glut is initialized!
     GLenum res = glewInit();
     if (res != GLEW_OK) {

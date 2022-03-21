@@ -63,7 +63,7 @@ void set_OrthographicProj(t_pipeline *p, OrthoProjInfo *proj)
     p->m_orthoProjInfo = p;
 }
 
-set_camera_attr(t_pipeline *p, t_vec3f pos, t_vec3f target, t_vec3f up)
+void set_camera_attr(t_pipeline *p, t_vec3f pos, t_vec3f target, t_vec3f up)
 {
     p->m_camera.Pos = p;
     p->m_camera.Target = target;
@@ -75,6 +75,15 @@ void set_camera(t_pipeline *p, t_camera *camera)
     set_camera_attr(p, camera->Pos, camera->Target, camera->Up);
 }
 
+void init_orientation()
+{
+    t_orientation orientation;
+
+    orientation.m_scale    = Vector3f(1.0f, 1.0f, 1.0f);
+    orientation.m_rotation = Vector3f(0.0f, 0.0f, 0.0f);
+    orientation.m_pos      = Vector3f(0.0f, 0.0f, 0.0f);
+}
+
 void set_orient(t_pipeline *p, t_orientation o)
 {
     p->m_scale = o.m_scale;
@@ -82,14 +91,7 @@ void set_orient(t_pipeline *p, t_orientation o)
     p->m_rotateInfo = o.m_rotateInfo;
 }
 
-void set_orient_WorldTrans(t_pipeline *p, WorldTrans *w)
-{
-    p->m_scale = w->GetScale;
-    p->m_worldPos = w->GetRotation;
-    p->m_rotateInfo = w->GetPos;
-}
-
-float *void GetWorldTrans(t_pipeline p)
+matrix_t GetWorldTrans(t_pipeline p)
 {
     matrix_t ScaleTrans = s21_matrix_create(4, 4);
     matrix_t RotateTrans = s21_matrix_create(4, 4);
@@ -99,36 +101,49 @@ float *void GetWorldTrans(t_pipeline p)
     InitRotateTransform(RotateTrans, m_rotateInfo.x, m_rotateInfo.y, m_rotateInfo.z);
     InitTranslationTransform(TranslationTrans, m_worldPos.x, m_worldPos.y, m_worldPos.z);
 
-    m_Wtransformation = s21_mult_matrix(TranslationTrans, RotateTrans);
-    m_Wtransformation = s21_mult_matrix(m_Wtransformation, ScaleTrans);
-    return m_Wtransformation;
+    if (p->m_Wtransformation) {
+        s21_free_matrix(p->m_Wtransformation);
+    }
+    p->m_Wtransformation = s21_mult_matrix(TranslationTrans, RotateTrans);
+    matrix_t temp = p->m_Wtransformation;
+    p->m_Wtransformation = s21_mult_matrix(p->m_Wtransformation, ScaleTrans);
+    s21_free_matrix(temp);
+    return p->m_Wtransformation;
 }
 
 matrix_t GetViewTrans(t_pipeline *p)
 {
-    matrix_t CameraTranslationTrans, CameraRotateTrans;
+    matrix_t CameraTranslationTrans = s21_create_matrix(4,4);
+    matrix_t CameraRotateTrans = s21_create_matrix(4,4);
 
     InitTranslationTransform(CameraTranslationTrans, -m_camera.Pos.x, -m_camera.Pos.y, -m_camera.Pos.z);
-    InitCameraTransform(CameraRotateTrans, m_camera.Target, m_camera.Up);
+    InitCameraTransform_2v(CameraRotateTrans, m_camera.Target, m_camera.Up);
     p->m_Vtransformation = s21_mult_matrix(CameraRotateTrans, CameraTranslationTrans);
     return p->m_Vtransformation;
 }
 
-void GetVPTrans(t_pipeline *p)
+matrix_t GetProjTrans(t_pipeline *p)
 {
-    GetViewTrans();
-    GetProjTrans();
+    InitPersProjTransform(p->m_ProjTransformation, p->m_persProjInfo);
+    return p->m_ProjTransformation;
+}
 
+matrix_t GetVPTrans(t_pipeline *p)
+{
+    GetViewTrans(p);
+    GetProjTrans(p);
+    matrix_t t = p->m_VPtransformation;
     p->m_VPtransformation = s21_mult_matrix(p->m_ProjTransformation, p->m_Vtransformation);
+    s21_free_matrix(t);
     return p->m_VPtransformation;
 }
 
-float *get_WVPtransformation(t_pipeline *p)
+matrix_t GetWVPTrans(t_pipeline *p)
 {
     GetWorldTrans();
     GetVPTrans();
 
-    p->m_WVPtransformation = s21_mult_matrix(&m_VPtransformation, m_Wtransformation);
+    p->m_WVPtransformation = s21_mult_matrix(p->m_VPtransformation, p->m_Wtransformation);
     return p->m_WVPtransformation.matrix;
 }
 

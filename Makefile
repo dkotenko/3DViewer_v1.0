@@ -38,7 +38,7 @@ HEADERS_FILES=\
 ######### SRCS ##############
 SRCS_DIR=src
 SRCS_FILES_FOR_TEST=
-SRCS_NOT_TEST = main.c parser.c glut.c vector.c utils.c shader.c
+SRCS_NOT_TEST = main.c parser.c glut.c vector.c utils.c shader.c camera.c
 SRCS_FILES=$(SRCS_FOR_TEST) $(SRCS_NOT_TEST)
 #############################
 
