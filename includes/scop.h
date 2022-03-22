@@ -104,6 +104,7 @@ void InitCameraTransform_2v(matrix_t *CameraRotateTrans, const t_vec3f Target, c
 void InitCameraTransform_3v(matrix_t *CameraRotateTrans, t_vec3f Pos, t_vec3f Target, t_vec3f Up);
 t_vec3f Cross(t_vec3f vector, t_vec3f v);
 t_vec3f Normalize(t_vec3f v);
+void t_camera_handle_key(t_camera *camera, int key);
 
 
 

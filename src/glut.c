@@ -51,7 +51,7 @@ static void RenderSceneCB()
 
     p = t_pipeline_new();
 
-    set_rotateInfo(p, 0.0f, scale, 0.0f);
+    //set_rotateInfo(p, 0.0f, scale, 0.0f);
     set_WorldPos_3f(p, 0.0f, 0.0f, 3.0f);
     set_camera(p, pGameCamera);
     set_PerspectiveProj(p, gPersProjInfo);
@@ -78,29 +78,13 @@ static void RenderSceneCB()
     //exit(0);
 }
 
-static void SpecialkeyboardCB(int key, int x, int y)
+static void SpecialKeyboardCB(int key, int x, int y)
 {
     //OGLDEV_KEY Ogldevkey = GLUTkeyToOGLDEVkey(key);
     //pGameCamera->Onkeyboard(key);
-    switch (key) {
-        case GLUT_KEY_RIGHT:
-            break ;
-        case GLUT_KEY_LEFT:
-            break ;
-        case GLUT_KEY_UP:
-            break ;
-        case GLUT_KEY_DOWN:
-            break ;
-        case GLUT_KEY_PAGE_UP:
-            break ;
-        case GLUT_KEY_PAGE_DOWN:
-            break ;
-        case GLUT_KEY_HOME:
-            break ;
-        case GLUT_KEY_END:
-            break ;
-    };
-    printf("special key_num:%d x:%d y:%d\n", key, x, y);
+    t_camera_handle_key(pGameCamera, key);
+    
+    //printf("special key_num:%d x:%d y:%d\n", key, x, y);
 }
 
 #define _KEY_ESCAPE 27
@@ -110,7 +94,8 @@ static void NonSpecialKeyboardCB(unsigned char key, int x, int y)
     if (key == _KEY_ESCAPE) {
         exit(0);
     }
-    printf("ordinary key_num:%d x:%d y:%d\n", key, x, y);
+    t_camera_handle_key(pGameCamera, key);
+    //printf("ordinary key_num:%d x:%d y:%d\n", key, x, y);
 }
 
 

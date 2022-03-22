@@ -17,3 +17,37 @@ void t_vec3f_print(t_vec3f v, char *name)
 {
     printf("t_vec3f %s: x:%f y:%f z:%f\n", name, v.x, v.y, v.z);
 }
+
+t_vec3f t_vec3f_sum(t_vec3f a, t_vec3f b)
+{
+    t_vec3f new;
+
+    new.x = a.x + b.x;
+    new.y = a.y + b.y;
+    new.z = a.z + b.z;
+
+    return new;
+}
+
+t_vec3f t_vec3f_sub(t_vec3f a, t_vec3f b)
+{
+    t_vec3f new;
+
+    new.x = a.x - b.x;
+    new.y = a.y - b.y;
+    new.z = a.z - b.z;
+
+    return new;
+}
+
+t_vec3f t_vec3f_multf(t_vec3f a, float f)
+{
+    t_vec3f new;
+
+    new.x = a.x * f;
+    new.y = a.y * f;
+    new.z = a.z * f;
+
+    return new;
+}
+
