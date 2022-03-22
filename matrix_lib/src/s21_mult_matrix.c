@@ -2,7 +2,7 @@
 
 matrix_t s21_mult_matrix(matrix_t *A, matrix_t *B)
 {
-    int sum = 0;
+    float sum = 0;
 
     if (A->columns != B->rows || A->rows < 1 || A->columns < 1 || B->rows < 1 || B->columns < 1) {
 		return s21_get_incorrect_matrix();

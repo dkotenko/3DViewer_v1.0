@@ -81,7 +81,7 @@ void set_camera_attr(t_pipeline *p, t_vec3f pos, t_vec3f target, t_vec3f up);
 void set_camera(t_pipeline *p, t_camera *camera);
 void set_orient(t_pipeline *p, t_orientation o);
 
-matrix_t GetWorldTrans(t_pipeline p);
+matrix_t GetWorldTrans(t_pipeline *p);
 matrix_t GetViewTrans(t_pipeline *p);
 matrix_t GetProjTrans(t_pipeline *p);
 matrix_t GetVPTrans(t_pipeline *p);
@@ -94,7 +94,7 @@ float *GetWVPTrans(t_pipeline *p);
 void InitRotationX(matrix_t *ScaleTrans, float x);
 void InitRotationY(matrix_t ScaleTrans, float y);
 void InitRotationZ(matrix_t ScaleTrans, float z);
-void InitScaleTransform(matrix_t ScaleTrans, float ScaleX, float ScaleY, float ScaleZ);
+void InitScaleTransform(matrix_t *ScaleTrans, float ScaleX, float ScaleY, float ScaleZ);
 void InitRotateTransform(matrix_t *m, float RotateX, float RotateY, float RotateZ);
 void InitTranslationTransform(matrix_t *matrix, float x, float y, float z);
 void InitOrthoProjTransform(matrix_t matrix, OrthoProjInfo p);

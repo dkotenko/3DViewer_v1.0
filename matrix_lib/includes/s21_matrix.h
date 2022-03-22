@@ -37,6 +37,6 @@ void s21_free_matrix(matrix_t *matrix, int i);
 void s21_free_matrix_array(float **matrix, int i);
 float s21_determinant(matrix_t *A);
 float s21_determinant_array(float **B, int m, int n);
-
+void s21_print_matrix(matrix_t *m, char *name);
 
 #endif

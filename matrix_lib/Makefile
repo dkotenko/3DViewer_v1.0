@@ -16,7 +16,8 @@ SRCS_FILES=s21_calc_complements.c \
 	s21_sub_matrix.c \
 	s21_sum_matrix.c \
 	s21_transpose.c \
-	s21_free_matrix.c
+	s21_free_matrix.c \
+	s21_print_matrix.c
 
 SRCS=$(addprefix $(SRCS_DIR)/, $(SRCS_FILES))
 HEADERS = $(addprefix $(HEADERS_DIR)/, $(HEADERS_FILES))

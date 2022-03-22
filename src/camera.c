@@ -1,5 +1,6 @@
 #include "scop.h"
 #include "vector.h"
+#include <stdio.h>
 
 void t_camera_free(t_camera *camera)
 {
@@ -19,6 +20,7 @@ t_camera *t_camera_new(int width, int height)
 
 void t_camera_print(t_camera *camera)
 {
+    printf("Camera:\n");
     t_vec3f_print(camera->Pos, "pos");
     t_vec3f_print(camera->Target, "Target");
     t_vec3f_print(camera->Up, "up");

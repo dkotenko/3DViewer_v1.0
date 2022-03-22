@@ -38,9 +38,9 @@ void InitRotationZ(matrix_t ScaleTrans, float z)
     m[3][0] = 0.0f   ; m[3][1] = 0.0f    ; m[3][2] = 0.0f; m[3][3] = 1.0f;
 }
 
-void InitScaleTransform(matrix_t ScaleTrans, float ScaleX, float ScaleY, float ScaleZ)
+void InitScaleTransform(matrix_t *ScaleTrans, float ScaleX, float ScaleY, float ScaleZ)
 {
-    float **m = (float **)ScaleTrans.matrix;
+    float **m = (float **)ScaleTrans->matrix;
 
     m[0][0] = ScaleX; m[0][1] = 0.0f;   m[0][2] = 0.0f;   m[0][3] = 0.0f;
     m[1][0] = 0.0f;   m[1][1] = ScaleY; m[1][2] = 0.0f;   m[1][3] = 0.0f;

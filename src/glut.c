@@ -6,8 +6,8 @@
 #include "scop.h"
 #include "s21_matrix.h"
 
-#define WINDOW_WIDTH 640
-#define WINDOW_HEIGHT 480
+#define WINDOW_WIDTH 1024
+#define WINDOW_HEIGHT 768
 
 GLuint VBO;
 GLuint IBO;
@@ -16,6 +16,30 @@ GLuint gWVPLocation;
 t_camera *pGameCamera;
 PersProjInfo gPersProjInfo;
 t_pipeline *p;
+
+static void t_pipeline_print(t_pipeline *p)
+{
+    PersProjInfo t = p->m_persProjInfo;
+    t_vec3f_print(p->m_scale, "m_scale");
+    t_vec3f_print(p->m_worldPos, "m_worldPos");
+    t_vec3f_print(p->m_rotateInfo, "m_rotateInfo");
+
+    printf("PersProjInfo: FOV:%f Width:%f Height:%f zNear:%f zFar:%f\n",\
+    t.FOV, t.Width, t.Height, t.zNear, t.zFar);
+
+    OrthoProjInfo o = p->m_orthoProjInfo;
+    printf("OrthoProjInfo: r:%f l:%f b:%f t:%f n:%f f:%f\n",\
+    o.r, o.l, o.b, o.t, o.n, o.f);
+
+    t_camera_print(&p->m_camera);
+    s21_print_matrix(&p->m_WVPtransformation, "m_WVPtransformation");
+    s21_print_matrix(&p->m_VPtransformation, "m_VPtransformation");
+    s21_print_matrix(&p->m_WPtransformation, "m_WPtransformation");
+    s21_print_matrix(&p->m_WVtransformation, "m_WVtransformation");
+    s21_print_matrix(&p->m_Wtransformation, "m_Wtransformation");
+    s21_print_matrix(&p->m_Vtransformation, "m_Vtransformation");
+    s21_print_matrix(&p->m_ProjTransformation, "m_ProjTransformation");
+}
 
 static void RenderSceneCB()
 {
@@ -50,14 +74,43 @@ static void RenderSceneCB()
     glDisableVertexAttribArray(0);
 
     glutSwapBuffers();
+    //t_pipeline_print(p);
+    //exit(0);
 }
 
-static void SpecialKeyboardCB(int Key, int x, int y)
+static void SpecialkeyboardCB(int key, int x, int y)
 {
-    //OGLDEV_KEY OgldevKey = GLUTKeyToOGLDEVKey(Key);
-    //pGameCamera->OnKeyboard(Key);
-    printf("key_num:%d x:%d y:%d\n", Key, x, y);
-    
+    //OGLDEV_KEY Ogldevkey = GLUTkeyToOGLDEVkey(key);
+    //pGameCamera->Onkeyboard(key);
+    switch (key) {
+        case GLUT_KEY_RIGHT:
+            break ;
+        case GLUT_KEY_LEFT:
+            break ;
+        case GLUT_KEY_UP:
+            break ;
+        case GLUT_KEY_DOWN:
+            break ;
+        case GLUT_KEY_PAGE_UP:
+            break ;
+        case GLUT_KEY_PAGE_DOWN:
+            break ;
+        case GLUT_KEY_HOME:
+            break ;
+        case GLUT_KEY_END:
+            break ;
+    };
+    printf("special key_num:%d x:%d y:%d\n", key, x, y);
+}
+
+#define _KEY_ESCAPE 27
+
+static void NonSpecialKeyboardCB(unsigned char key, int x, int y)
+{
+    if (key == _KEY_ESCAPE) {
+        exit(0);
+    }
+    printf("ordinary key_num:%d x:%d y:%d\n", key, x, y);
 }
 
 
@@ -91,6 +144,7 @@ static void InitializeGlutCallbacks()
     glutDisplayFunc(RenderSceneCB);
     glutIdleFunc(RenderSceneCB);
     glutSpecialFunc(SpecialKeyboardCB);
+    glutKeyboardFunc(NonSpecialKeyboardCB);
 }
 
 
@@ -101,9 +155,6 @@ int handle_glut(int argc, char **argv)
     glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
     glutInitWindowPosition(100, 100);
     int win = glutCreateWindow("3DViewer_V1.0");
-    
-    
-    
 
     
     InitializeGlutCallbacks();
@@ -130,6 +181,7 @@ int handle_glut(int argc, char **argv)
     gPersProjInfo.Width = WINDOW_WIDTH;
     gPersProjInfo.zNear = 1.0f;
     gPersProjInfo.zFar = 100.0f;
+
 
     glutMainLoop();
     t_camera_free(pGameCamera);
