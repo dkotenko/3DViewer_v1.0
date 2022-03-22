@@ -25,12 +25,21 @@ static void RenderSceneCB()
     static float delta = 0.1f;
     scale += delta;
 
+    p = t_pipeline_new();
+
     set_rotateInfo(p, 0.0f, scale, 0.0f);
     set_WorldPos_3f(p, 0.0f, 0.0f, 3.0f);
     set_camera(p, pGameCamera);
     set_PerspectiveProj(p, gPersProjInfo);
     
-    glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, (const GLfloat*)GetWVPTrans(p));
+    const GLfloat* WVPTrans = (const GLfloat*)GetWVPTrans(p);
+    /* for (int i = 0; i < 16; i++) {
+        printf("%f ", WVPTrans[i]);
+    }
+    printf("\n");
+    */
+
+    glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, WVPTrans);
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -47,7 +56,7 @@ static void SpecialKeyboardCB(int Key, int x, int y)
 {
     //OGLDEV_KEY OgldevKey = GLUTKeyToOGLDEVKey(Key);
     //pGameCamera->OnKeyboard(Key);
-    printf("key_num:%d x:%d y:%d\n");
+    printf("key_num:%d x:%d y:%d\n", Key, x, y);
     
 }
 
@@ -93,14 +102,10 @@ int handle_glut(int argc, char **argv)
     glutInitWindowPosition(100, 100);
     int win = glutCreateWindow("3DViewer_V1.0");
     
-    gPersProjInfo.FOV = 60.0f;
-    gPersProjInfo.Height = WINDOW_HEIGHT;
-    gPersProjInfo.Width = WINDOW_WIDTH;
-    gPersProjInfo.zNear = 1.0f;
-    gPersProjInfo.zFar = 100.0f;
+    
     
 
-    p = t_pipeline_new();
+    
     InitializeGlutCallbacks();
     pGameCamera = t_camera_new(WINDOW_WIDTH, WINDOW_HEIGHT);
     
@@ -119,6 +124,13 @@ int handle_glut(int argc, char **argv)
     if (compile_shaders()) {
         fprintf(stderr, "%s\n", "Error during shader compiling");
     }
+
+    gPersProjInfo.FOV = 60.0f;
+    gPersProjInfo.Height = WINDOW_HEIGHT;
+    gPersProjInfo.Width = WINDOW_WIDTH;
+    gPersProjInfo.zNear = 1.0f;
+    gPersProjInfo.zFar = 100.0f;
+
     glutMainLoop();
     t_camera_free(pGameCamera);
     return 0;

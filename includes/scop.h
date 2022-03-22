@@ -61,6 +61,7 @@ int compile_shaders();
 
 t_camera *t_camera_new(int width, int height);
 void t_camera_free(t_camera *camera);
+void t_camera_print(t_camera *camera);
 
 /*
 ** pipeline.c

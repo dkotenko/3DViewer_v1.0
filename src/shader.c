@@ -2,7 +2,9 @@
 #include <GL/freeglut.h>
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 #include "scop.h"
+
 extern GLuint gWVPLocation;
 
 static void add_shader(GLuint shader_program, const char* pShaderText, GLenum ShaderType)
@@ -56,12 +58,10 @@ int compile_shaders()
         return (1);
     };
 
-    add_shader(shader_program, vs, GL_VERTEX_SHADER);
-
     if (!(fs = read_file((char *)fs_file))) {
         return (1);
     };
-
+    add_shader(shader_program, vs, GL_VERTEX_SHADER);
     add_shader(shader_program, fs, GL_FRAGMENT_SHADER);
 
     GLint Success = 0;
@@ -86,5 +86,6 @@ int compile_shaders()
 
     glUseProgram(shader_program);
     gWVPLocation = glGetUniformLocation(shader_program, "gWVP");
+    assert(gWVPLocation != 0xFFFFFFFF);
     return (0);
 }

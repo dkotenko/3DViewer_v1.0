@@ -162,8 +162,8 @@ t_vec3f Normalize(t_vec3f v)
     }
 
     norm.x = v.x / Length;
-    norm.y /= v.y / Length;
-    norm.z /= v.z / Length;
+    norm.y = v.y / Length;
+    norm.z = v.z / Length;
 
     return norm;
 }
