@@ -67,15 +67,27 @@ void t_camera_handle_key(t_camera *camera, int key)
         case GLUT_KEY_END:
             break ;
         case 'q':
-            p->m_rotateInfo.y -= 1.f;
-            printf("%f\n", p->m_rotateInfo.y);
-            set_rotateInfo(p, 0.0f, p->m_rotateInfo.y, 0.0f);
+            p->m_rotateInfo.y += STEP_SCALE;
             break ;
         case 'w':
-            p->m_rotateInfo.y += 1.f;
-            printf("%f\n", p->m_rotateInfo.y);
-            set_rotateInfo(p, 0.0f, p->m_rotateInfo.y, 0.0f);
+            p->m_rotateInfo.y -= STEP_SCALE;
             break ;
+        case 'a':
+            p->m_rotateInfo.z += STEP_SCALE;
+            break ;
+        case 's':
+            p->m_rotateInfo.z -= STEP_SCALE;
+            break ;
+        case 'z':
+            p->m_rotateInfo.x += STEP_SCALE;
+            break ;
+        case 'x':
+            p->m_rotateInfo.x -= STEP_SCALE;
+            break ;
+        case ' ':
+            set_rotateInfo(p, 0.0f, 0.0f, 0.0f);
+            break ;
+
     };
 }
 

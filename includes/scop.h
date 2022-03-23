@@ -3,6 +3,7 @@
 
 #include "vector.h"
 #include "s21_matrix.h"
+#include "parser.h"
 
 typedef struct {
     t_vec3f Pos;
@@ -56,12 +57,17 @@ typedef struct {
 
 
 char *read_file(char *filename);
-int handle_glut(int ac, char **av);
+int handle_glut(int ac, char **av, t_mesh *mesh);
 int compile_shaders();
 
 t_camera *t_camera_new(int width, int height);
 void t_camera_free(t_camera *camera);
 void t_camera_print(t_camera *camera);
+
+/*
+** glut.c
+*/
+
 
 /*
 ** pipeline.c

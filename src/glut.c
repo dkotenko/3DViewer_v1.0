@@ -3,6 +3,7 @@
 #include <GL/freeglut.h>
 #include <string.h>
 #include "vector.h"
+#include "cvector.h"
 #include "scop.h"
 #include "s21_matrix.h"
 
@@ -41,15 +42,16 @@ static void t_pipeline_print(t_pipeline *p)
     s21_print_matrix(&p->m_ProjTransformation, "m_ProjTransformation");
 }
 
+enum {
+    POINT,
+    TRIANGLE,
+    NUM
+} e_prim_types;
+
+#define DRAW_PRIMITIVE TRIANGLE
 static void RenderSceneCB()
 {
     glClear(GL_COLOR_BUFFER_BIT);
-
-    static float scale = 0.0f;
-    static float delta = 0.1f;
-    scale += delta;
-
-    p = t_pipeline_new();
 
     //set_rotateInfo(p, 0.0f, scale, 0.0f);
     set_WorldPos_3f(p, 0.0f, 0.0f, 3.0f);
@@ -68,8 +70,14 @@ static void RenderSceneCB()
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-
-    glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
+    if (DRAW_PRIMITIVE == POINT) {
+        glDrawArrays(GL_POINTS, 0, 12);
+        glEnable(GL_PROGRAM_POINT_SIZE);
+    } else {
+        glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
+    }
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    
 
     glDisableVertexAttribArray(0);
 
@@ -99,21 +107,17 @@ static void NonSpecialKeyboardCB(unsigned char key, int x, int y)
 }
 
 
-static void CreateVertexBuffer()
+static void CreateVertexBuffer(t_mesh *mesh)
 {
-    t_vec3f vertices[4];
-
-    vertices[0] = t_vec3f_new(-1.0f, -1.0f, 0.5773f);
-    vertices[1] = t_vec3f_new(0.0f, -1.0f, -1.15475f);
-    vertices[2] = t_vec3f_new(1.0f, -1.0f, 0.5773f);
-    vertices[3] = t_vec3f_new(0.0f, 1.0f, 0.0f);
+    int vertices_size = (int)cvector_size(mesh->vertices);
+    
 
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(t_vec3f) * vertices_size, mesh->vertices, GL_STATIC_DRAW);
 }
 
-static void CreateIndexBuffer()
+static void CreateIndexBuffer(t_mesh *mesh)
 {
     unsigned int Indices[] = { 0, 3, 1,
                                1, 3, 2,
@@ -133,7 +137,7 @@ static void InitializeGlutCallbacks()
 }
 
 
-int handle_glut(int argc, char **argv)
+int handle_glut(int argc, char **argv, t_mesh *mesh)
 {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA);
@@ -141,7 +145,7 @@ int handle_glut(int argc, char **argv)
     glutInitWindowPosition(100, 100);
     int win = glutCreateWindow("3DViewer_V1.0");
 
-    
+    p = t_pipeline_new();
     InitializeGlutCallbacks();
     pGameCamera = t_camera_new(WINDOW_WIDTH, WINDOW_HEIGHT);
     
@@ -154,8 +158,8 @@ int handle_glut(int argc, char **argv)
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-    CreateVertexBuffer();
-    CreateIndexBuffer();
+    CreateVertexBuffer(mesh);
+    CreateIndexBuffer(mesh);
 
     if (compile_shaders()) {
         fprintf(stderr, "%s\n", "Error during shader compiling");
