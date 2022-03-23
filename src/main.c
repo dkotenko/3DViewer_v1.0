@@ -51,6 +51,10 @@ void get_default_mesh(t_mesh *mesh)
     cvector_push_back(mesh->vertices, t_vec3f_new(0.0f, -1.0f, -1.15475f));
     cvector_push_back(mesh->vertices, t_vec3f_new(1.0f, -1.0f, 0.5773f));
     cvector_push_back(mesh->vertices, t_vec3f_new(0.0f, 1.0f, 0.0f));
+
+    
+    
+    //memcpy(mesh->)
 }
 
 int main(int ac, char **av)

@@ -11,5 +11,5 @@ void main()
     
     gl_PointSize = 10.0;
     gl_Position = gWVP * vec4(Position, 1.0);
-    Color = vec4(1.0, 1.0, 0.0, 1.0);
+    Color = vec4(1.0, 0.5, 0.2, 1.0);
 }

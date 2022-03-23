@@ -155,8 +155,8 @@ int handle_glut(int argc, char **argv, t_mesh *mesh)
         fprintf(stderr, "Error: '%s'\n", glewGetErrorString(res));
         return 1;
     }
-
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    //51,76,76,255
+    glClearColor(51.0f / 256.0f, 76.0f/256.0f, 76.0f/256.0f, 1.0f);
 
     CreateVertexBuffer(mesh);
     CreateIndexBuffer(mesh);
