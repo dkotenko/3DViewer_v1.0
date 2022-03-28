@@ -78,17 +78,17 @@ static int	count_words(char const *s)
 	return (counter);
 }
 
-void populate_f(char *s, t_mesh *mesh)
+void parse_f(char *s, t_mesh *mesh)
 {
-    t_face face;
-    t_vx_index *indices = NULL;
+    t_face_transport face;
+    t_vertex_index *indices = NULL;
     
     int words_num = count_words(s);
     if (words_num != 4 && words_num != 5) {
         return ;
     }
     if (words_num == 3) {
-        indices = (t_vx_index *)calloc(sizeof(t_vx_index), 3);
+        indices = (t_vertex_index *)calloc(sizeof(t_vertex_index), 3);
         face.vertex_num = 3;
 
         if (strchr(s, '/')) {
@@ -106,7 +106,7 @@ void populate_f(char *s, t_mesh *mesh)
             indices[2].texture = indices[2].vertex;
         }
     } else if (words_num == 4) {
-        indices = (t_vx_index *)calloc(sizeof(t_vx_index), 4);
+        indices = (t_vertex_index *)calloc(sizeof(t_vertex_index), 4);
         face.vertex_num = 4;
         if (strchr(s, '/')) {
             sscanf(s, PATTERN_F_4_SLASH, \
@@ -128,8 +128,39 @@ void populate_f(char *s, t_mesh *mesh)
         
     }
     face.indices = indices;
-    cvector_push_back(mesh->faces, face);
+    cvector_push_back(mesh->faces_transport, face);
+}
 
+void populate_f(t_mesh *mesh)
+{
+    t_face_transport *t = mesh->faces_transport;
+    int faces_num = cvector_size(t);
+    
+    if (!faces_num) {
+        return;
+    printf("here\n");
+    }
+    for (int i = 0; i < faces_num; i++) {
+        t_face face = {0};
+        face.vertex_num = t[i].vertex_num;
+        for (int j = 0; j < face.vertex_num; j++) {
+            printf("%d %d\n", i, j);
+            t_vertex vertex_to_add = {0};
+
+            int vertex_index = t[i].indices[j].vertex;
+            vertex_to_add.vertex = mesh->vertices[vertex_index];
+
+            int normal_index = t[i].indices[j].normal;
+            vertex_to_add.normal = mesh->normals[normal_index];
+
+            int texture_index = t[i].indices[j].texture;
+            vertex_to_add.texture = mesh->textures[texture_index];
+
+            cvector_push_back(face.vertices, vertex_to_add);
+        }
+        cvector_push_back(mesh->faces, face);
+    }
+    printf("%d\n", mesh->faces[0].vertices[0].vertex);
 }
 
 int parse_content(char *s, t_mesh *mesh)
@@ -141,7 +172,7 @@ int parse_content(char *s, t_mesh *mesh)
     } else if (!strncmp("v", s, 1)) {
         parse_v(s, mesh);
     } else if (!strncmp("f", s, 1)) {
-        populate_f(s, mesh);
+        parse_f(s, mesh);
     }
     return 1;
 }
@@ -180,7 +211,19 @@ int parse_file(char *filename, t_mesh *mesh)
     line_buf = NULL;
     fclose(fp);
 
+    populate_f(mesh);
     return EXIT_SUCCESS;
+}
+
+void print_parse_result(t_mesh *mesh)
+{
+    if (!DEBUG) {
+        return ;
+    }
+    printf("faces: %d\n", (int)cvector_size(mesh->faces) - 1);
+    printf("vertices: %d\n", (int)cvector_size(mesh->vertices) - 1);
+    printf("textures: %d\n", (int)cvector_size(mesh->textures) - 1);
+    printf("normals: %d\n", (int)cvector_size(mesh->normals) - 1);
 }
 
 

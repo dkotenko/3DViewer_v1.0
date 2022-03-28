@@ -5,6 +5,9 @@
 #include "s21_matrix.h"
 #include "parser.h"
 
+#define DEBUG 0
+#define START_INDEX 0
+
 typedef struct {
     t_vec3f Pos;
     t_vec3f Target;

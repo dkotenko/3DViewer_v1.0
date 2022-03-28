@@ -17,6 +17,7 @@ GLuint gWVPLocation;
 t_camera *pGameCamera;
 PersProjInfo gPersProjInfo;
 t_pipeline *p;
+t_mesh *g_mesh;
 
 static void t_pipeline_print(t_pipeline *p)
 {
@@ -59,17 +60,10 @@ static void RenderSceneCB()
     set_PerspectiveProj(p, gPersProjInfo);
     
     const GLfloat* WVPTrans = (const GLfloat*)GetWVPTrans(p);
-    /* for (int i = 0; i < 16; i++) {
-        printf("%f ", WVPTrans[i]);
-    }
-    printf("\n");
-    */
-
     glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, WVPTrans);
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+    draw_mesh(g_mesh);
+    glutSwapBuffers();
+    /*
     if (DRAW_PRIMITIVE == POINT) {
         glDrawArrays(GL_POINTS, 0, 12);
         glEnable(GL_PROGRAM_POINT_SIZE);
@@ -77,13 +71,8 @@ static void RenderSceneCB()
         glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
     }
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    */
     
-
-    glDisableVertexAttribArray(0);
-
-    glutSwapBuffers();
-    //t_pipeline_print(p);
-    //exit(0);
 }
 
 static void SpecialKeyboardCB(int key, int x, int y)
@@ -145,6 +134,7 @@ int handle_glut(int argc, char **argv, t_mesh *mesh)
     glutInitWindowPosition(100, 100);
     int win = glutCreateWindow("3DViewer_V1.0");
 
+    g_mesh = mesh;
     p = t_pipeline_new();
     InitializeGlutCallbacks();
     pGameCamera = t_camera_new(WINDOW_WIDTH, WINDOW_HEIGHT);

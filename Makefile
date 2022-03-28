@@ -47,7 +47,8 @@ SRCS_NOT_TEST = \
 	camera.c \
 	math.c \
 	pipeline.c \
-	shader.c
+	shader.c \
+	mesh.c
 
 SRCS_FILES=$(SRCS_FOR_TEST) $(SRCS_NOT_TEST)
 #############################
