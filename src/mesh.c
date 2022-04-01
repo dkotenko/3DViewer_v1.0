@@ -42,7 +42,7 @@ void draw_mesh(t_mesh *mesh)
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(t_vertex), (const GLvoid*)12);
         glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(t_vertex), (const GLvoid*)20);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Entries[i].IB);
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Entries[i].IB);
 
         /*
         const unsigned int MaterialIndex = m_Entries[i].MaterialIndex;
@@ -83,9 +83,29 @@ void get_default_mesh(t_mesh *mesh)
         t.vertex_num = 3;
         cvector_push_back(mesh->faces_transport, t);
     }
-    t_face_transport_print(mesh->faces_transport, "");
-    exit(0);
     populate_f(mesh);
+}
+
+void init_faces(t_mesh *mesh)
+{
+    //NumIndices = Indices.size();
+    int vertices_size = cvector_size(mesh->vertices) - START_INDEX;
+
+    for (int i = 0 + START_INDEX; i < cvector_size(mesh->faces); i++) {
+        glGenBuffers(1, &mesh->faces[i].VB);
+        glBindBuffer(GL_ARRAY_BUFFER, mesh->faces[i].VB);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(t_vertex) * vertices_size, &mesh->vertices[0], GL_STATIC_DRAW);
+        
+    /*
+        glGenBuffers(1, &IB);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * NumIndices, &Indices[0], GL_STATIC_DRAW);
+    */
+    }
+    
+
+    
+    
 }
 
 

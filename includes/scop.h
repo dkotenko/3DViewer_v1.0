@@ -123,5 +123,6 @@ void t_face_transport_print(t_face_transport *t, char *label);
 void t_face_print(t_face *face, char *label);
 void t_vertex_index_print(t_vertex_index vi);
 void t_vertex_print(t_vertex vertex);
+void init_faces(t_mesh *mesh);
 
 #endif

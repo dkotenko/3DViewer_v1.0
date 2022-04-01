@@ -40,6 +40,9 @@ typedef struct {
 	int material_index;
 } t_mesh;
 
+typedef struct {
+} t_mesh_transport;
+
 typedef struct s_object_node{
 	struct s_object_node *children;
 	int *meshes_indexes;

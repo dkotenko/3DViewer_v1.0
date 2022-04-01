@@ -52,7 +52,7 @@ enum {
 #define DRAW_PRIMITIVE TRIANGLE
 static void RenderSceneCB()
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //set_rotateInfo(p, 0.0f, scale, 0.0f);
     set_WorldPos_3f(p, 0.0f, 0.0f, 3.0f);
     set_camera(p, pGameCamera);
@@ -60,7 +60,7 @@ static void RenderSceneCB()
     
     const GLfloat* WVPTrans = (const GLfloat*)GetWVPTrans(p);
     glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, WVPTrans);
-    print_mesh(g_mesh);
+    //print_mesh(g_mesh);
     //exit(0);
     draw_mesh(g_mesh);
     glutSwapBuffers();
@@ -78,10 +78,7 @@ static void RenderSceneCB()
 
 static void SpecialKeyboardCB(int key, int x, int y)
 {
-    //OGLDEV_KEY Ogldevkey = GLUTkeyToOGLDEVkey(key);
-    //pGameCamera->Onkeyboard(key);
     t_camera_handle_key(pGameCamera, key);
-    
     //printf("special key_num:%d x:%d y:%d\n", key, x, y);
 }
 
@@ -137,6 +134,7 @@ int handle_glut(int argc, char **argv, t_mesh *mesh)
 
     g_mesh = mesh;
     p = t_pipeline_new();
+    
     InitializeGlutCallbacks();
     pGameCamera = t_camera_new(WINDOW_WIDTH, WINDOW_HEIGHT);
     
@@ -151,6 +149,7 @@ int handle_glut(int argc, char **argv, t_mesh *mesh)
 
     CreateVertexBuffer(mesh);
     CreateIndexBuffer(mesh);
+    init_faces(g_mesh);
 
     if (compile_shaders()) {
         fprintf(stderr, "%s\n", "Error during shader compiling");

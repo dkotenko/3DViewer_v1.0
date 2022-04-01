@@ -128,13 +128,13 @@ void parse_f(char *s, t_mesh *mesh)
         
     }
     face.indices = indices;
+    
     cvector_push_back(mesh->faces_transport, face);
 }
 
 void populate_f(t_mesh *mesh)
 {
     t_face_transport *t = mesh->faces_transport;
-
     int faces_num = cvector_size(t);
     
     if (!faces_num) {
@@ -145,8 +145,7 @@ void populate_f(t_mesh *mesh)
     int is_tex = cvector_size(mesh->textures);
     int is_nor = cvector_size(mesh->normals);
     for (int i = 0 + START_INDEX; i < faces_num; i++) {
-        t_face face;
-
+        t_face face = {0};
         face.vertex_num = t[i].vertex_num;
         
         for (int j = 0; j < face.vertex_num; j++) {
@@ -162,7 +161,6 @@ void populate_f(t_mesh *mesh)
             if (normal_index != NO_ELEMENT && is_nor) {
                 vertex_to_add.normal = mesh->normals[normal_index];
             }
-            
             int texture_index = t[i].indices[j].texture;
             if (texture_index != NO_ELEMENT && is_tex ) {
                 vertex_to_add.texture = mesh->textures[texture_index];

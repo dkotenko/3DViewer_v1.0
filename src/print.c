@@ -41,27 +41,27 @@ void print_mesh(t_mesh *mesh)
 {
     printf("MESH OUTPUT:\n\n");
     printf("vertices num: %d\n", cvector_size(mesh->vertices) - START_INDEX);
-    for (int i = 0 + START_INDEX; i < cvector_size(mesh->vertices) + START_INDEX; i++) {
+    for (int i = 0 + START_INDEX; i < cvector_size(mesh->vertices); i++) {
         t_vec3f_print(mesh->vertices[i], "vertex");
     }
 
     printf("normals num: %d\n", cvector_size(mesh->normals) - START_INDEX);
-    for (int i = 0  + START_INDEX; i < cvector_size(mesh->normals) + START_INDEX; i++) {
+    for (int i = 0  + START_INDEX; i < cvector_size(mesh->normals); i++) {
         t_vec3f_print(mesh->normals[i], "normal");
     }
 
     printf("textures num: %d\n", cvector_size(mesh->textures) - START_INDEX);
-    for (int i = 0 + START_INDEX; i < cvector_size(mesh->textures) + START_INDEX; i++) {
+    for (int i = 0 + START_INDEX; i < cvector_size(mesh->textures); i++) {
         t_vec2f_print(mesh->textures[i], "texture");
     }
 
     printf("faces num: %d\n", cvector_size(mesh->faces) - START_INDEX);
-    for (int i = 0 + START_INDEX; i < cvector_size(mesh->faces) + START_INDEX; i++) {
-        t_face_print(mesh->faces, "face");
+    for (int i = 0 + START_INDEX; i < cvector_size(mesh->faces); i++) {
+        t_face_print(&mesh->faces[i], "face");
     }
 
     printf("faces transport num: %d\n", cvector_size(mesh->faces_transport) - START_INDEX);
-    for (int i = 0 + START_INDEX; i < cvector_size(mesh->faces_transport) + START_INDEX; i++) {
-        t_face_transport_print(mesh->faces_transport, "face transport");
+    for (int i = 0 + START_INDEX; i < cvector_size(mesh->faces_transport); i++) {
+        t_face_transport_print(&mesh->faces_transport[i], "face transport");
     }
 }
