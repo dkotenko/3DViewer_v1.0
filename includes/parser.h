@@ -4,6 +4,7 @@
 #include "vector.h"
 #include <GL/glew.h>
 #include <GL/freeglut.h>
+#include <stdio.h>
 
 typedef struct {
 	int vertex;

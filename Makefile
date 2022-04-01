@@ -48,7 +48,8 @@ SRCS_NOT_TEST = \
 	math.c \
 	pipeline.c \
 	shader.c \
-	mesh.c
+	mesh.c \
+	print.c
 
 SRCS_FILES=$(SRCS_FOR_TEST) $(SRCS_NOT_TEST)
 #############################

@@ -20,7 +20,7 @@
 
 #define is_space(c) c == ' ' || c == '\t'
 
-
+#define NO_ELEMENT -1
 /*
 void skip_first(char *s, char **to_set)
 {
@@ -47,7 +47,7 @@ void parse_vn(char *s, t_mesh *mesh)
     t_vec3f new;
 
     sscanf(s, PATTERN_VN, &new.x, &new.y, &new.z);
-    cvector_push_back(mesh->vertices, new);
+    cvector_push_back(mesh->normals, new);
 }
 
 void parse_vt(char *s, t_mesh *mesh)
@@ -98,12 +98,12 @@ void parse_f(char *s, t_mesh *mesh)
         &indices[2].vertex, &indices[2].texture, &indices[2].normal);
         } else {
             sscanf(s, PATTERN_F_3, &indices[0].vertex, &indices[1].vertex, &indices[2].vertex);
-            indices[0].normal = indices[0].vertex;
-            indices[1].normal = indices[1].vertex;
-            indices[2].normal = indices[2].vertex;
-            indices[0].texture = indices[0].vertex;
-            indices[1].texture = indices[1].vertex;
-            indices[2].texture = indices[2].vertex;
+            indices[0].normal = NO_ELEMENT;
+            indices[1].normal = NO_ELEMENT;
+            indices[2].normal = NO_ELEMENT;
+            indices[0].texture = NO_ELEMENT;
+            indices[1].texture = NO_ELEMENT;
+            indices[2].texture = NO_ELEMENT;
         }
     } else if (words_num == 4) {
         indices = (t_vertex_index *)calloc(sizeof(t_vertex_index), 4);
@@ -116,14 +116,14 @@ void parse_f(char *s, t_mesh *mesh)
             &indices[3].vertex, &indices[3].texture, &indices[3].normal);
         } else {
             sscanf(s, PATTERN_F_3, &indices[0].vertex, &indices[1].vertex, &indices[2].vertex, &indices[3].vertex);
-            indices[0].normal = indices[0].vertex;
-            indices[1].normal = indices[1].vertex;
-            indices[2].normal = indices[2].vertex;
-            indices[3].normal = indices[3].vertex;
-            indices[0].texture = indices[0].vertex;
-            indices[1].texture = indices[1].vertex;
-            indices[2].texture = indices[2].vertex;
-            indices[3].normal = indices[3].vertex;
+            indices[0].normal = NO_ELEMENT;
+            indices[1].normal = NO_ELEMENT;
+            indices[2].normal = NO_ELEMENT;
+            indices[3].normal = NO_ELEMENT;
+            indices[0].texture = NO_ELEMENT;
+            indices[1].texture = NO_ELEMENT;
+            indices[2].texture = NO_ELEMENT;
+            indices[3].normal = NO_ELEMENT;
         }
         
     }
@@ -134,33 +134,43 @@ void parse_f(char *s, t_mesh *mesh)
 void populate_f(t_mesh *mesh)
 {
     t_face_transport *t = mesh->faces_transport;
+
     int faces_num = cvector_size(t);
     
     if (!faces_num) {
         return;
-    printf("here\n");
     }
-    for (int i = 0; i < faces_num; i++) {
-        t_face face = {0};
+    
+    
+    int is_tex = cvector_size(mesh->textures);
+    int is_nor = cvector_size(mesh->normals);
+    for (int i = 0 + START_INDEX; i < faces_num; i++) {
+        t_face face;
+
         face.vertex_num = t[i].vertex_num;
+        
         for (int j = 0; j < face.vertex_num; j++) {
-            printf("%d %d\n", i, j);
+
             t_vertex vertex_to_add = {0};
-
+    
             int vertex_index = t[i].indices[j].vertex;
-            vertex_to_add.vertex = mesh->vertices[vertex_index];
-
+            if (vertex_index != NO_ELEMENT) {
+                vertex_to_add.vertex = mesh->vertices[vertex_index];
+            }
+            
             int normal_index = t[i].indices[j].normal;
-            vertex_to_add.normal = mesh->normals[normal_index];
-
+            if (normal_index != NO_ELEMENT && is_nor) {
+                vertex_to_add.normal = mesh->normals[normal_index];
+            }
+            
             int texture_index = t[i].indices[j].texture;
-            vertex_to_add.texture = mesh->textures[texture_index];
-
+            if (texture_index != NO_ELEMENT && is_tex ) {
+                vertex_to_add.texture = mesh->textures[texture_index];
+            }
             cvector_push_back(face.vertices, vertex_to_add);
         }
         cvector_push_back(mesh->faces, face);
     }
-    printf("%d\n", mesh->faces[0].vertices[0].vertex);
 }
 
 int parse_content(char *s, t_mesh *mesh)

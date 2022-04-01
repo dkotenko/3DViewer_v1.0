@@ -18,6 +18,11 @@ void t_vec3f_print(t_vec3f v, char *name)
     printf("t_vec3f %s: x:%f y:%f z:%f\n", name, v.x, v.y, v.z);
 }
 
+void t_vec2f_print(t_vec2f v, char *name)
+{
+    printf("t_vec3f %s: x:%f y:%f\n", name, v.x, v.y);
+}
+
 t_vec3f t_vec3f_sum(t_vec3f a, t_vec3f b)
 {
     t_vec3f new;

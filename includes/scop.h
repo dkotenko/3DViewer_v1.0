@@ -6,7 +6,7 @@
 #include "parser.h"
 
 #define DEBUG 0
-#define START_INDEX 0
+#define START_INDEX 1
 
 typedef struct {
     t_vec3f Pos;
@@ -115,6 +115,13 @@ t_vec3f Cross(t_vec3f vector, t_vec3f v);
 t_vec3f Normalize(t_vec3f v);
 void t_camera_handle_key(t_camera *camera, int key);
 
-
+/*
+** mesh.h
+*/
+void print_mesh(t_mesh *mesh);
+void t_face_transport_print(t_face_transport *t, char *label);
+void t_face_print(t_face *face, char *label);
+void t_vertex_index_print(t_vertex_index vi);
+void t_vertex_print(t_vertex vertex);
 
 #endif

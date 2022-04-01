@@ -4,18 +4,20 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
+
 t_mesh t_mesh_init_zeroes()
 {
-    t_mesh mesh;
-    memset(&mesh, 0, sizeof(t_mesh));
+    t_mesh mesh = {0};
     t_vec3f v3 = {0}; 
     t_vec2f v2 = {0};
     t_face face = {0};
+    t_face_transport t = {0};
 
     /*
     ** opengl indices start with 1
     */
     if (START_INDEX) {
+        cvector_push_back(mesh.faces_transport, t);
         cvector_push_back(mesh.faces, face);
         cvector_push_back(mesh.vertices, v3);
         cvector_push_back(mesh.normals, v3);
@@ -49,7 +51,7 @@ void draw_mesh(t_mesh *mesh)
         }
         */
 
-        glDrawElements(GL_TRIANGLES, m_Entries[i].NumIndices, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, m_Entries[i].vertex_num, GL_UNSIGNED_INT, 0);
     }
 
     glDisableVertexAttribArray(0);
@@ -65,21 +67,25 @@ void get_default_mesh(t_mesh *mesh)
     cvector_push_back(mesh->vertices, t_vec3f_new(0.0f, -1.0f, -1.15475f));
     cvector_push_back(mesh->vertices, t_vec3f_new(1.0f, -1.0f, 0.5773f));
     cvector_push_back(mesh->vertices, t_vec3f_new(0.0f, 1.0f, 0.0f));
-
     unsigned int Indices[] = { 0, 3, 1,
                                1, 3, 2,
                                2, 3, 0,
                                0, 1, 2 };
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0 + START_INDEX; i < 4 + START_INDEX; i++) {
         t_face_transport t = {0};
 
         for (int j = 0; j < 3; j++) {
             t_vertex_index index = {0};
-            index.vertex = Indices[i + j];
+            index.vertex = Indices[(START_INDEX ? i - 1 : i) + j];
             cvector_push_back(t.indices, index);
         }
+        t.vertex_num = 3;
         cvector_push_back(mesh->faces_transport, t);
     }
+    t_face_transport_print(mesh->faces_transport, "");
+    exit(0);
     populate_f(mesh);
 }
+
+

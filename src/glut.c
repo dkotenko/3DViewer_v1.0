@@ -53,7 +53,6 @@ enum {
 static void RenderSceneCB()
 {
     glClear(GL_COLOR_BUFFER_BIT);
-
     //set_rotateInfo(p, 0.0f, scale, 0.0f);
     set_WorldPos_3f(p, 0.0f, 0.0f, 3.0f);
     set_camera(p, pGameCamera);
@@ -61,6 +60,8 @@ static void RenderSceneCB()
     
     const GLfloat* WVPTrans = (const GLfloat*)GetWVPTrans(p);
     glUniformMatrix4fv(gWVPLocation, 1, GL_TRUE, WVPTrans);
+    print_mesh(g_mesh);
+    //exit(0);
     draw_mesh(g_mesh);
     glutSwapBuffers();
     /*
