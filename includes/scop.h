@@ -1,12 +1,14 @@
 #ifndef SCOP_H
 #define SCOP_H
 
+#include <stdbool.h>
 #include "vector.h"
 #include "s21_matrix.h"
 #include "parser.h"
 
 #define DEBUG 0
-#define START_INDEX 1
+#define WINDOW_WIDTH 1024
+#define WINDOW_HEIGHT 768
 
 typedef struct {
     t_vec3f Pos;
@@ -60,7 +62,7 @@ typedef struct {
 
 
 char *read_file(char *filename);
-int handle_glut(int ac, char **av, t_mesh *mesh);
+int handle_glut(t_mesh *mesh);
 int compile_shaders();
 
 t_camera *t_camera_new(int width, int height);
@@ -70,7 +72,8 @@ void t_camera_print(t_camera *camera);
 /*
 ** glut.c
 */
-
+void GLUTBackendInit(int argc, char **argv);
+bool GLUTBackendCreateWindow(unsigned int Width, unsigned int Height, bool isFullScreen, const char* pTitle);
 
 /*
 ** pipeline.c
@@ -123,6 +126,9 @@ void t_face_transport_print(t_face_transport *t, char *label);
 void t_face_print(t_face *face, char *label);
 void t_vertex_index_print(t_vertex_index vi);
 void t_vertex_print(t_vertex vertex);
-void init_faces(t_mesh *mesh);
+void init_mesh_gl(t_mesh *mesh);
+void t_pipeline_print(t_pipeline *p);
+void clear_mesh(t_mesh *mesh);
+bool load_mesh(t_mesh *mesh, char *filename);
 
 #endif

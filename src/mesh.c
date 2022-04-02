@@ -4,55 +4,36 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
+#define _free(a) if (a) free(a);
 
-t_mesh t_mesh_init_zeroes()
+void clear_mesh(t_mesh *mesh)
 {
-    t_mesh mesh = {0};
-    t_vec3f v3 = {0}; 
-    t_vec2f v2 = {0};
-    t_face face = {0};
-    t_face_transport t = {0};
-
-    /*
-    ** opengl indices start with 1
-    */
-    if (START_INDEX) {
-        cvector_push_back(mesh.faces_transport, t);
-        cvector_push_back(mesh.faces, face);
-        cvector_push_back(mesh.vertices, v3);
-        cvector_push_back(mesh.normals, v3);
-        cvector_push_back(mesh.textures, v2);
+    for (int i = 0; i < cvector_size(mesh->faces); i++) {
+        _free(mesh->faces_transport[i].indices);
+        _free(mesh->faces[i].vertices);
     }
-    return mesh;
+
+    _free(mesh->faces);
+    _free(mesh->faces_transport);
+    _free(mesh->vertices);
+    _free(mesh->normals);
+    _free(mesh->textures);
+    memset(mesh, 0, sizeof(t_mesh));
 }
-
-
 
 void draw_mesh(t_mesh *mesh)
 {
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
-    t_face *m_Entries = mesh->faces;
-    int faces_num = cvector_size(mesh->faces);
 
-    for (unsigned int i = 0 ; i < faces_num ; i++) {
-        glBindBuffer(GL_ARRAY_BUFFER, m_Entries[i].VB);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(t_vertex), 0);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(t_vertex), (const GLvoid*)12);
-        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(t_vertex), (const GLvoid*)20);
-
-        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Entries[i].IB);
-
-        /*
-        const unsigned int MaterialIndex = m_Entries[i].MaterialIndex;
-        if (MaterialIndex < m_Textures.size() && m_Textures[MaterialIndex]) {
-            m_Textures[MaterialIndex]->Bind(GL_TEXTURE0);
-        }
-        */
-
-        glDrawElements(GL_TRIANGLES, m_Entries[i].vertex_num, GL_UNSIGNED_INT, 0);
-    }
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->VB);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(t_vertex), 0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(t_vertex), (const GLvoid*)12);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(t_vertex), (const GLvoid*)20);
+    
+    glDrawArrays(GL_TRIANGLE_FAN, 0, cvector_size(mesh->vertices));
+    //glDrawElements(GL_TRIANGLES, cvector_size(mesh->vertices), GL_UNSIGNED_INT, 0);
 
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
@@ -72,40 +53,52 @@ void get_default_mesh(t_mesh *mesh)
                                2, 3, 0,
                                0, 1, 2 };
 
-    for (int i = 0 + START_INDEX; i < 4 + START_INDEX; i++) {
+    for (int i = 0; i < 4; i++) {
         t_face_transport t = {0};
 
         for (int j = 0; j < 3; j++) {
             t_vertex_index index = {0};
-            index.vertex = Indices[(START_INDEX ? i - 1 : i) + j];
+            index.vertex = Indices[i + j];
             cvector_push_back(t.indices, index);
         }
-        t.vertex_num = 3;
+        t.indices_num = 3;
         cvector_push_back(mesh->faces_transport, t);
     }
     populate_f(mesh);
 }
 
-void init_faces(t_mesh *mesh)
+void init_mesh_gl(t_mesh *mesh)
 {
     //NumIndices = Indices.size();
-    int vertices_size = cvector_size(mesh->vertices) - START_INDEX;
+    int vertices_size = cvector_size(mesh->vertices);
 
-    for (int i = 0 + START_INDEX; i < cvector_size(mesh->faces); i++) {
-        glGenBuffers(1, &mesh->faces[i].VB);
-        glBindBuffer(GL_ARRAY_BUFFER, mesh->faces[i].VB);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(t_vertex) * vertices_size, &mesh->vertices[0], GL_STATIC_DRAW);
+    
+    glGenBuffers(1, &mesh->VB);
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->VB);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(t_vertex) * vertices_size, &mesh->vertices[0], GL_STATIC_DRAW);
         
     /*
         glGenBuffers(1, &IB);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * NumIndices, &Indices[0], GL_STATIC_DRAW);
     */
-    }
-    
+}
 
-    
-    
+bool load_mesh(t_mesh *mesh, char *filename)
+{
+    clear_mesh(mesh);
+
+    if (filename) {
+        if (parse_file(filename, mesh) == EXIT_FAILURE) {
+            printf("parsing error\n");
+            return false;
+        }
+        //print_parse_result(&mesh);
+    } else {
+        get_default_mesh(mesh);
+    }
+    init_mesh_gl(mesh);
+    return true;
 }
 
 

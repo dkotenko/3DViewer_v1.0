@@ -7,8 +7,7 @@
 #include "scop.h"
 #include "s21_matrix.h"
 
-#define WINDOW_WIDTH 1024
-#define WINDOW_HEIGHT 768
+
 
 GLuint VBO;
 GLuint IBO;
@@ -19,29 +18,7 @@ PersProjInfo gPersProjInfo;
 t_pipeline *p;
 t_mesh *g_mesh;
 
-static void t_pipeline_print(t_pipeline *p)
-{
-    PersProjInfo t = p->m_persProjInfo;
-    t_vec3f_print(p->m_scale, "m_scale");
-    t_vec3f_print(p->m_worldPos, "m_worldPos");
-    t_vec3f_print(p->m_rotateInfo, "m_rotateInfo");
 
-    printf("PersProjInfo: FOV:%f Width:%f Height:%f zNear:%f zFar:%f\n",\
-    t.FOV, t.Width, t.Height, t.zNear, t.zFar);
-
-    OrthoProjInfo o = p->m_orthoProjInfo;
-    printf("OrthoProjInfo: r:%f l:%f b:%f t:%f n:%f f:%f\n",\
-    o.r, o.l, o.b, o.t, o.n, o.f);
-
-    t_camera_print(&p->m_camera);
-    s21_print_matrix(&p->m_WVPtransformation, "m_WVPtransformation");
-    s21_print_matrix(&p->m_VPtransformation, "m_VPtransformation");
-    s21_print_matrix(&p->m_WPtransformation, "m_WPtransformation");
-    s21_print_matrix(&p->m_WVtransformation, "m_WVtransformation");
-    s21_print_matrix(&p->m_Wtransformation, "m_Wtransformation");
-    s21_print_matrix(&p->m_Vtransformation, "m_Vtransformation");
-    s21_print_matrix(&p->m_ProjTransformation, "m_ProjTransformation");
-}
 
 enum {
     POINT,
@@ -123,33 +100,56 @@ static void InitializeGlutCallbacks()
     glutKeyboardFunc(NonSpecialKeyboardCB);
 }
 
-
-int handle_glut(int argc, char **argv, t_mesh *mesh)
+void GLUTBackendInit(int argc, char **argv)
 {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGBA);
-    glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-    glutInitWindowPosition(100, 100);
-    int win = glutCreateWindow("3DViewer_V1.0");
+}
 
-    g_mesh = mesh;
-    p = t_pipeline_new();
-    
-    InitializeGlutCallbacks();
-    pGameCamera = t_camera_new(WINDOW_WIDTH, WINDOW_HEIGHT);
-    
+bool GLUTBackendCreateWindow(unsigned int Width, unsigned int Height, bool isFullScreen, const char* pTitle)
+{
+    if (isFullScreen) {
+        char ModeString[64] = { 0 };
+        int bpp = 32;
+        snprintf(ModeString, sizeof(ModeString), "%dx%d:%d@60", Width, Height, bpp);
+        glutGameModeString(ModeString);
+        glutEnterGameMode();
+    }
+    else {
+        glutInitWindowSize(Width, Height);
+        glutCreateWindow(pTitle);
+    }
+
     // Must be done after glut is initialized!
     GLenum res = glewInit();
     if (res != GLEW_OK) {
         fprintf(stderr, "Error: '%s'\n", glewGetErrorString(res));
-        return 1;
+        return false;
     }
-    //51,76,76,255
+
+    return true;
+}
+
+int handle_glut(t_mesh *mesh)
+{
+    g_mesh = mesh;
+    p = t_pipeline_new();
+    
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glFrontFace(GL_CW);
+    glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
+
+    
+    pGameCamera = t_camera_new(WINDOW_WIDTH, WINDOW_HEIGHT);
+    
+    
+    //51,76,76,255 - cadetblue / orange
     glClearColor(51.0f / 256.0f, 76.0f/256.0f, 76.0f/256.0f, 1.0f);
 
     CreateVertexBuffer(mesh);
     CreateIndexBuffer(mesh);
-    init_faces(g_mesh);
+    init_mesh_gl(g_mesh);
 
     if (compile_shaders()) {
         fprintf(stderr, "%s\n", "Error during shader compiling");
@@ -161,7 +161,7 @@ int handle_glut(int argc, char **argv, t_mesh *mesh)
     gPersProjInfo.zNear = 1.0f;
     gPersProjInfo.zFar = 100.0f;
 
-
+    InitializeGlutCallbacks();
     glutMainLoop();
     t_camera_free(pGameCamera);
     return 0;

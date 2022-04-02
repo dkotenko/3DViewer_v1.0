@@ -12,6 +12,8 @@
 #define PATTERN_V "v %f %f %f"
 #define PATTERN_VN "vn %f %f %f"
 #define PATTERN_VT "vt %f %f"
+#define PATTERN_F "%d"
+#define PATTERN_F_SLASH "%d/%d/%d"
 #define PATTERN_F_3 "f %d %d %d"
 #define PATTERN_F_3_SLASH "f %d/%d/%d %d/%d/%d %d/%d/%d"
 #define PATTERN_F_4 "f %d %d %d %d"
@@ -58,78 +60,89 @@ void parse_vt(char *s, t_mesh *mesh)
     cvector_push_back(mesh->textures, new);
 }
 
+#define skip_spaces(s) while (*s && isspace(*s)) {*s++;}
+#define skip_non_spaces(s) while (*s && !isspace(*s)) {*s++;}
+
 static int	count_words(char const *s)
 {
-	int		i;
 	int		counter;
 
-	i = 0;
 	counter = 0;
-	while (s[i])
+	while (*s)
 	{
-		while (s[i] && isspace(s[i]))
-			i++;
-		if (!s[i])
+        skip_spaces(s);
+		if (!*s)
 			return (counter);
 		counter++;
-		while (s[i] && !isspace(s[i]))
-			i++;
+        skip_non_spaces(s);
 	}
 	return (counter);
 }
 
+
+
+//assume all polygons are convex
+
+//USED METHOD: FAN
+t_face_transport *split_face(t_face_transport *face)
+{
+    t_face_transport *faces = NULL;
+    int first = 0;
+    int second = 1;
+    int third = 2;
+
+    for (int i = 0; i < face->indices_num - 2; i++) {
+        t_face_transport temp = {0};
+        temp.indices_num = 3;
+        cvector_push_back(temp.indices, face->indices[first]);
+        cvector_push_back(temp.indices, face->indices[second]);
+        cvector_push_back(temp.indices, face->indices[third]);
+        cvector_push_back(faces, temp);
+        second++;
+        third++;
+    }
+    return faces;
+}
+
+
 void parse_f(char *s, t_mesh *mesh)
 {
     t_face_transport face;
-    t_vertex_index *indices = NULL;
     
+    s += 2; //skip "f ";
     int words_num = count_words(s);
-    if (words_num != 4 && words_num != 5) {
+    
+    if (words_num < 3) {
+        printf("invalid line, must be at least 3 verices: %s\n", s);
         return ;
     }
-    if (words_num == 3) {
-        indices = (t_vertex_index *)calloc(sizeof(t_vertex_index), 3);
-        face.vertex_num = 3;
 
-        if (strchr(s, '/')) {
-            sscanf(s, PATTERN_F_3_SLASH, \
-        &indices[0].vertex, &indices[0].texture, &indices[0].normal, \
-        &indices[1].vertex, &indices[1].texture, &indices[1].normal, \
-        &indices[2].vertex, &indices[2].texture, &indices[2].normal);
+    bool is_slashed = strchr(s, '/');
+    while (*s) {
+        t_vertex_index index;
+        memset(&index, -1, sizeof(t_vertex_index));
+        face.indices_num = 0;
+
+        if (is_slashed) {
+            sscanf(s, PATTERN_F_SLASH, &index.vertex, &index.texture, &index.normal);
         } else {
-            sscanf(s, PATTERN_F_3, &indices[0].vertex, &indices[1].vertex, &indices[2].vertex);
-            indices[0].normal = NO_ELEMENT;
-            indices[1].normal = NO_ELEMENT;
-            indices[2].normal = NO_ELEMENT;
-            indices[0].texture = NO_ELEMENT;
-            indices[1].texture = NO_ELEMENT;
-            indices[2].texture = NO_ELEMENT;
+            sscanf(s, PATTERN_F, &index.vertex);
         }
-    } else if (words_num == 4) {
-        indices = (t_vertex_index *)calloc(sizeof(t_vertex_index), 4);
-        face.vertex_num = 4;
-        if (strchr(s, '/')) {
-            sscanf(s, PATTERN_F_4_SLASH, \
-            &indices[0].vertex, &indices[0].texture, &indices[0].normal, \
-            &indices[1].vertex, &indices[1].texture, &indices[1].normal, \
-            &indices[2].vertex, &indices[2].texture, &indices[2].normal, \
-            &indices[3].vertex, &indices[3].texture, &indices[3].normal);
-        } else {
-            sscanf(s, PATTERN_F_3, &indices[0].vertex, &indices[1].vertex, &indices[2].vertex, &indices[3].vertex);
-            indices[0].normal = NO_ELEMENT;
-            indices[1].normal = NO_ELEMENT;
-            indices[2].normal = NO_ELEMENT;
-            indices[3].normal = NO_ELEMENT;
-            indices[0].texture = NO_ELEMENT;
-            indices[1].texture = NO_ELEMENT;
-            indices[2].texture = NO_ELEMENT;
-            indices[3].normal = NO_ELEMENT;
-        }
-        
+        cvector_push_back(face.indices, index);
+        face.indices_num++;
+        skip_non_spaces(s);
+        skip_spaces(s);
     }
-    face.indices = indices;
-    
     cvector_push_back(mesh->faces_transport, face);
+    
+    if (words_num == 3) {
+        cvector_push_back(mesh->faces_transport, face);
+    } else {
+        t_face_transport *faces = split_face(&face);
+        for (int i = 0; i < cvector_size(faces); i++) {
+            cvector_push_back(mesh->faces_transport, faces[i]);
+        }
+    }
 }
 
 void populate_f(t_mesh *mesh)
@@ -143,26 +156,27 @@ void populate_f(t_mesh *mesh)
     
     
     int is_tex = cvector_size(mesh->textures);
+    
     int is_nor = cvector_size(mesh->normals);
-    for (int i = 0 + START_INDEX; i < faces_num; i++) {
+    for (int i = 0; i < faces_num; i++) {
         t_face face = {0};
-        face.vertex_num = t[i].vertex_num;
+        face.vertex_num = t[i].indices_num;
         
         for (int j = 0; j < face.vertex_num; j++) {
 
             t_vertex vertex_to_add = {0};
-    
             int vertex_index = t[i].indices[j].vertex;
+            
             if (vertex_index != NO_ELEMENT) {
                 vertex_to_add.vertex = mesh->vertices[vertex_index];
             }
             
             int normal_index = t[i].indices[j].normal;
-            if (normal_index != NO_ELEMENT && is_nor) {
+            if (normal_index != NO_ELEMENT && (is_nor)) {
                 vertex_to_add.normal = mesh->normals[normal_index];
             }
             int texture_index = t[i].indices[j].texture;
-            if (texture_index != NO_ELEMENT && is_tex ) {
+            if (texture_index != NO_ELEMENT && (is_tex)) {
                 vertex_to_add.texture = mesh->textures[texture_index];
             }
             cvector_push_back(face.vertices, vertex_to_add);
@@ -173,13 +187,13 @@ void populate_f(t_mesh *mesh)
 
 int parse_content(char *s, t_mesh *mesh)
 {
-    if (!strncmp("vt", s, 2)) {
+    if (!strncmp("vt ", s, 3)) {
         parse_vt(s, mesh);
-    } else if (!strncmp("vn", s, 2)) {
+    } else if (!strncmp("vn ", s, 3)) {
         parse_vn(s, mesh);
-    } else if (!strncmp("v", s, 1)) {
+    } else if (!strncmp("v ", s, 2)) {
         parse_v(s, mesh);
-    } else if (!strncmp("f", s, 1)) {
+    } else if (!strncmp("f ", s, 2)) {
         parse_f(s, mesh);
     }
     return 1;
@@ -218,7 +232,10 @@ int parse_file(char *filename, t_mesh *mesh)
     }
     line_buf = NULL;
     fclose(fp);
-
+    for (int i = 0; i < cvector_size(mesh->faces_transport); i++) {
+        printf("%d\n", cvector_size(mesh->faces_transport));
+    }
+    exit(0);
     populate_f(mesh);
     return EXIT_SUCCESS;
 }

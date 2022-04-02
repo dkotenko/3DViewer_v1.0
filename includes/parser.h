@@ -28,7 +28,7 @@ typedef struct {
 
 typedef struct {
 	t_vertex_index *indices;
-	int vertex_num;
+	int indices_num;
 } t_face_transport;
 
 typedef struct {
@@ -38,6 +38,8 @@ typedef struct {
 	t_face *faces;
 	t_face_transport *faces_transport;
 	int material_index;
+	GLuint VB;
+    GLuint IB;
 } t_mesh;
 
 typedef struct {
@@ -45,7 +47,7 @@ typedef struct {
 
 typedef struct s_object_node{
 	struct s_object_node *children;
-	int *meshes_indexes;
+	int *m111eshes_indexes;
 } t_obj_node;
 
 typedef struct {
@@ -54,13 +56,12 @@ typedef struct {
 
 typedef struct {
 	t_obj_node *root_node;
-	t_mesh *meshes;
+	t_mesh *m111eshes;
 	t_material *materials;
 } t_obj;
 
 int parse_file(char *filename, t_mesh *mesh);
 void print_parse_result(t_mesh *mesh);
-t_mesh t_mesh_init_zeroes();
 void draw_mesh(t_mesh *mesh);
 void get_default_mesh(t_mesh *mesh);
 void populate_f(t_mesh *mesh);

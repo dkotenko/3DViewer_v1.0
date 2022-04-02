@@ -14,18 +14,19 @@ int main(int ac, char **av)
         exit(0);
     }
     */
-    t_mesh mesh = t_mesh_init_zeroes();
+    GLUTBackendInit(ac, av);
 
-    if (ac > 1) {
-        if (parse_file(av[1], &mesh) == EXIT_FAILURE) {
-            printf("parsing error\n");
-            exit(0);
-        }
-        draw_mesh(&mesh);
-        print_parse_result(&mesh);
-    } else {
-        get_default_mesh(&mesh);
+    if (!GLUTBackendCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, false, "3DViewer_V1.0")) {
+        return 1;
     }
-    handle_glut(ac, av, &mesh);
-    return (0);
+
+    char *filename = ac > 1 ? av[1] : NULL;    
+    t_mesh mesh = {0};
+
+    if(!load_mesh(&mesh, filename)) {
+        return (0);
+    }
+
+    handle_glut(&mesh);
+    
 }
