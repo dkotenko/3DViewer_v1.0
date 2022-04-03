@@ -32,7 +32,7 @@ void draw_mesh(t_mesh *mesh)
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(t_vertex), (const GLvoid*)12);
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(t_vertex), (const GLvoid*)20);
     
-    glDrawArrays(GL_TRIANGLE_FAN, 0, cvector_size(mesh->vertices));
+    glDrawArrays(GL_TRIANGLES, 0, cvector_size(mesh->vertices_to_draw));
     //glDrawElements(GL_TRIANGLES, cvector_size(mesh->vertices), GL_UNSIGNED_INT, 0);
 
     glDisableVertexAttribArray(0);
@@ -44,10 +44,12 @@ void draw_mesh(t_mesh *mesh)
 
 void get_default_mesh(t_mesh *mesh)
 {
+    
     cvector_push_back(mesh->vertices, t_vec3f_new(-1.0f, -1.0f, 0.5773f));
     cvector_push_back(mesh->vertices, t_vec3f_new(0.0f, -1.0f, -1.15475f));
     cvector_push_back(mesh->vertices, t_vec3f_new(1.0f, -1.0f, 0.5773f));
-    cvector_push_back(mesh->vertices, t_vec3f_new(0.0f, 1.0f, 0.0f));
+    cvector_push_back(mesh->vertices, t_vec3f_new(0.0f, 0.0f, 0.0f));
+    //cvector_push_back(mesh->vertices, t_vec3f_new(0.0f, 1.0f, 0.0f));
     unsigned int Indices[] = { 0, 3, 1,
                                1, 3, 2,
                                2, 3, 0,
@@ -70,12 +72,12 @@ void get_default_mesh(t_mesh *mesh)
 void init_mesh_gl(t_mesh *mesh)
 {
     //NumIndices = Indices.size();
-    int vertices_size = cvector_size(mesh->vertices);
-
+    int vertices_size = cvector_size(mesh->vertices_to_draw);
+    printf("%d\n", vertices_size);
     
     glGenBuffers(1, &mesh->VB);
     glBindBuffer(GL_ARRAY_BUFFER, mesh->VB);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(t_vertex) * vertices_size, &mesh->vertices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(t_vertex) * vertices_size, mesh->vertices_to_draw, GL_STATIC_DRAW);
         
     /*
         glGenBuffers(1, &IB);

@@ -5,10 +5,15 @@
 #include "vector.h"
 #include "s21_matrix.h"
 #include "parser.h"
+#include <stdio.h>
 
 #define DEBUG 0
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 768
+
+
+
+#define here() printf("HERE\n");
 
 typedef struct {
     t_vec3f Pos;

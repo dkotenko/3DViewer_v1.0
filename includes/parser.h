@@ -32,6 +32,9 @@ typedef struct {
 } t_face_transport;
 
 typedef struct {
+	t_vertex *vertices_to_draw;
+	unsigned int *indices_to_draw;
+	t_vertex *vertices_orig;
 	t_vec3f *vertices;
 	t_vec3f *normals;
 	t_vec2f *textures;

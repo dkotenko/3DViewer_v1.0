@@ -136,9 +136,9 @@ int handle_glut(t_mesh *mesh)
     p = t_pipeline_new();
     
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glFrontFace(GL_CW);
-    glCullFace(GL_BACK);
-    glEnable(GL_CULL_FACE);
+    //glFrontFace(GL_CW);
+    //glCullFace(GL_BACK);
+    //glEnable(GL_CULL_FACE);
 
     
     pGameCamera = t_camera_new(WINDOW_WIDTH, WINDOW_HEIGHT);

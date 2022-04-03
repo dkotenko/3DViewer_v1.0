@@ -107,21 +107,20 @@ t_face_transport *split_face(t_face_transport *face)
 
 void parse_f(char *s, t_mesh *mesh)
 {
-    t_face_transport face;
+    t_face_transport face = {0};
     
     s += 2; //skip "f ";
     int words_num = count_words(s);
-    
     if (words_num < 3) {
         printf("invalid line, must be at least 3 verices: %s\n", s);
         return ;
     }
-
+    
+    
     bool is_slashed = strchr(s, '/');
     while (*s) {
-        t_vertex_index index;
+        t_vertex_index index = {0};
         memset(&index, -1, sizeof(t_vertex_index));
-        face.indices_num = 0;
 
         if (is_slashed) {
             sscanf(s, PATTERN_F_SLASH, &index.vertex, &index.texture, &index.normal);
@@ -133,7 +132,6 @@ void parse_f(char *s, t_mesh *mesh)
         skip_non_spaces(s);
         skip_spaces(s);
     }
-    cvector_push_back(mesh->faces_transport, face);
     
     if (words_num == 3) {
         cvector_push_back(mesh->faces_transport, face);
@@ -145,6 +143,7 @@ void parse_f(char *s, t_mesh *mesh)
     }
 }
 
+
 void populate_f(t_mesh *mesh)
 {
     t_face_transport *t = mesh->faces_transport;
@@ -153,8 +152,6 @@ void populate_f(t_mesh *mesh)
     if (!faces_num) {
         return;
     }
-    
-    
     int is_tex = cvector_size(mesh->textures);
     
     int is_nor = cvector_size(mesh->normals);
@@ -165,21 +162,26 @@ void populate_f(t_mesh *mesh)
         for (int j = 0; j < face.vertex_num; j++) {
 
             t_vertex vertex_to_add = {0};
-            int vertex_index = t[i].indices[j].vertex;
+            int vertex_index = t[i].indices[j].vertex - 1;
             
             if (vertex_index != NO_ELEMENT) {
                 vertex_to_add.vertex = mesh->vertices[vertex_index];
             }
             
-            int normal_index = t[i].indices[j].normal;
+            int normal_index = t[i].indices[j].normal - 1;
             if (normal_index != NO_ELEMENT && (is_nor)) {
                 vertex_to_add.normal = mesh->normals[normal_index];
             }
-            int texture_index = t[i].indices[j].texture;
+            int texture_index = t[i].indices[j].texture - 1;
             if (texture_index != NO_ELEMENT && (is_tex)) {
                 vertex_to_add.texture = mesh->textures[texture_index];
             }
             cvector_push_back(face.vertices, vertex_to_add);
+            cvector_push_back(mesh->vertices_to_draw, vertex_to_add);
+            cvector_push_back(mesh->indices_to_draw, t[i].indices[j].vertex);
+            cvector_push_back(mesh->indices_to_draw, t[i].indices[j].texture);
+            cvector_push_back(mesh->indices_to_draw, t[i].indices[j].normal);
+
         }
         cvector_push_back(mesh->faces, face);
     }
@@ -232,10 +234,6 @@ int parse_file(char *filename, t_mesh *mesh)
     }
     line_buf = NULL;
     fclose(fp);
-    for (int i = 0; i < cvector_size(mesh->faces_transport); i++) {
-        printf("%d\n", cvector_size(mesh->faces_transport));
-    }
-    exit(0);
     populate_f(mesh);
     return EXIT_SUCCESS;
 }
