@@ -7,18 +7,12 @@
 #include "scop.h"
 #include "s21_matrix.h"
 
-
-
-GLuint VBO;
-GLuint IBO;
 GLuint gWVPLocation;
 
 t_camera *pGameCamera;
 PersProjInfo gPersProjInfo;
 t_pipeline *p;
 t_mesh *g_mesh;
-
-
 
 enum {
     POINT,
@@ -70,28 +64,6 @@ static void NonSpecialKeyboardCB(unsigned char key, int x, int y)
     //printf("ordinary key_num:%d x:%d y:%d\n", key, x, y);
 }
 
-
-static void CreateVertexBuffer(t_mesh *mesh)
-{
-    int vertices_size = (int)cvector_size(mesh->vertices);
-    
-
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(t_vec3f) * vertices_size, mesh->vertices, GL_STATIC_DRAW);
-}
-
-static void CreateIndexBuffer(t_mesh *mesh)
-{
-    unsigned int Indices[] = { 0, 3, 1,
-                               1, 3, 2,
-                               2, 3, 0,
-                               0, 1, 2 };
-    glGenBuffers(1, &IBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);
-}
-
 static void InitializeGlutCallbacks()
 {
     glutDisplayFunc(RenderSceneCB);
@@ -136,20 +108,12 @@ int handle_glut(t_mesh *mesh)
     g_mesh = mesh;
     p = t_pipeline_new();
     
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    //glFrontFace(GL_CW);
-    //glCullFace(GL_BACK);
-    //glEnable(GL_CULL_FACE);
-
     
     pGameCamera = t_camera_new(WINDOW_WIDTH, WINDOW_HEIGHT);
     
     
     //51,76,76,255 - cadetblue / orange
     glClearColor(51.0f / 256.0f, 76.0f/256.0f, 76.0f/256.0f, 1.0f);
-
-    CreateVertexBuffer(mesh);
-    CreateIndexBuffer(mesh);
     init_mesh_gl(g_mesh);
 
     if (compile_shaders()) {

@@ -1,8 +1,6 @@
 #include "scop.h"
 #include "cvector.h"
 #include "parser.h"
-#include <GL/glew.h>
-#include <GL/freeglut.h>
 
 #define _free(a) if (a) free(a);
 

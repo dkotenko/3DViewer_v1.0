@@ -8,8 +8,11 @@
 #include <stdio.h>
 
 #define DEBUG 0
-#define WINDOW_WIDTH 1024
-#define WINDOW_HEIGHT 768
+#define WINDOW_WIDTH 640       
+#define WINDOW_HEIGHT 480
+#define WINDOW_START_X 200
+#define WINDOW_START_Y 100
+#define APP_NAME "3DViewer_V1.0"
 
 
 
@@ -136,4 +139,8 @@ void t_pipeline_print(t_pipeline *p);
 void clear_mesh(t_mesh *mesh);
 bool load_mesh(t_mesh *mesh, char *filename);
 
+/*
+**
+*/
+int run_gui(t_mesh *mesh, char *filename);
 #endif
