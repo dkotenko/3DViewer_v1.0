@@ -16,9 +16,10 @@ int main(int ac, char **av)
     */
     GLUTBackendInit(ac, av);
 
-    if (!GLUTBackendCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, false, "3DViewer_V1.0")) {
+    if (!GLUTBackendCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, false, APP_NAME)) {
         return 1;
     }
+    run_gui();
 
     char *filename = ac > 1 ? av[1] : NULL;    
     t_mesh mesh = {0};

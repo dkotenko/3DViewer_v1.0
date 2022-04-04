@@ -116,6 +116,7 @@ bool GLUTBackendCreateWindow(unsigned int Width, unsigned int Height, bool isFul
         glutEnterGameMode();
     }
     else {
+        glutInitWindowPosition(WINDOW_START_X, WINDOW_START_Y);
         glutInitWindowSize(Width, Height);
         glutCreateWindow(pTitle);
     }
