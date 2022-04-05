@@ -2,10 +2,13 @@
 #define SCOP_H
 
 #include <stdbool.h>
+#include <stdio.h>
+#include <SDL2/SDL.h>
 #include "vector.h"
 #include "s21_matrix.h"
 #include "parser.h"
-#include <stdio.h>
+#include "microui.h"
+#include "renderer.h"
 
 #define DEBUG 0
 #define WINDOW_WIDTH 640       
@@ -68,6 +71,21 @@ typedef struct {
     matrix_t m_ProjTransformation; 
 } t_pipeline;
 
+typedef struct {
+    t_camera *pGameCamera;
+    t_pipeline *p;
+    PersProjInfo gPersProjInfo;
+    SDL_GLContext *gContext;
+    SDL_Window* gWindow;
+    GLuint gWVPLocation;
+    const Uint8	*state;
+} t_globals;
+
+typedef struct {
+    t_mesh *mesh;
+    t_globals *g;
+} t_scop;
+
 
 char *read_file(char *filename);
 int handle_glut(t_mesh *mesh);
@@ -124,7 +142,7 @@ void InitCameraTransform_2v(matrix_t *CameraRotateTrans, const t_vec3f Target, c
 void InitCameraTransform_3v(matrix_t *CameraRotateTrans, t_vec3f Pos, t_vec3f Target, t_vec3f Up);
 t_vec3f Cross(t_vec3f vector, t_vec3f v);
 t_vec3f Normalize(t_vec3f v);
-void t_camera_handle_key(t_camera *camera, int key);
+void t_camera_handle_key(t_scop *scop,  t_camera *camera, int key);
 
 /*
 ** mesh.h
@@ -142,5 +160,12 @@ bool load_mesh(t_mesh *mesh, char *filename);
 /*
 **
 */
-int run_gui(t_mesh *mesh, char *filename);
+int run(t_scop *scop, char *filename, mu_Context *ctx);
+void microui_render(mu_Context *ctx);
+int text_height(mu_Font font);
+int text_width(mu_Font font, const char *text, int len);
+
+
+
+int init(t_scop *scop, char *filename, mu_Context *ctx);
 #endif

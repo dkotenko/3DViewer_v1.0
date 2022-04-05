@@ -43,7 +43,6 @@ SRCS_FILES_FOR_TEST=
 SRCS_NOT_TEST = \
 	main.c \
 	parser.c \
-	glut.c \
 	vector.c \
 	utils.c \
 	camera.c \
@@ -54,7 +53,9 @@ SRCS_NOT_TEST = \
 	print.c \
 	gui.c \
 	renderer.c \
-	microui.c
+	microui.c \
+	run.c \
+	init.c
 
 SRCS_FILES=$(SRCS_FOR_TEST) $(SRCS_NOT_TEST)
 #############################

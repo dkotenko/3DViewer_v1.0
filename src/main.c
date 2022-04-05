@@ -5,36 +5,8 @@
 #include <stdio.h>
 #include "s21_matrix.h"
 
-t_camera *pGameCamera;
-t_pipeline *p;
 
-int init(t_mesh *mesh)
-{
-    p = t_pipeline_new();
-    pGameCamera = t_camera_new(WINDOW_WIDTH, WINDOW_HEIGHT);
-    
-    
-    //51,76,76,255 - cadetblue / orange
-    glClearColor(51.0f / 256.0f, 76.0f/256.0f, 76.0f/256.0f, 1.0f);
-    init_mesh_gl(mesh);
 
-    if (compile_shaders()) {
-        fprintf(stderr, "%s\n", "Error during shader compiling");
-        return (0);
-    }
-
-    gPersProjInfo.FOV = 60.0f;
-    gPersProjInfo.Height = WINDOW_HEIGHT;
-    gPersProjInfo.Width = WINDOW_WIDTH;
-    gPersProjInfo.zNear = 1.0f;
-    gPersProjInfo.zFar = 100.0f;
-    if (!run_gui(mesh, filename)) {
-        t_camera_free(pGameCamera);
-        return (0);    
-    }
-    t_camera_free(pGameCamera);
-    return (1);
-}
 
 int main(int ac, char **av)
 {
@@ -44,11 +16,18 @@ int main(int ac, char **av)
         exit(0);
     }
     */
-    
     char *filename = ac > 1 ? av[1] : NULL;    
-    t_mesh mesh = {0};
-    init(&mesh, filename);
-    mu_Context *ctx = NULL;
     
-    run_gui();
+    t_scop scop = {0};
+    t_mesh mesh = {0};
+    t_globals g = {0};
+    mu_Context ctx;;
+    scop.mesh = &mesh;
+    scop.g = &g;
+
+    
+    init(&scop, filename, &ctx);
+    !run(&scop, filename, &ctx);
+    exit(0);
+    return (0);
 }

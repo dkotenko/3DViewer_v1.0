@@ -3,8 +3,6 @@
 #include <assert.h>
 #include "scop.h"
 
-extern GLuint gWVPLocation;
-
 static void add_shader(GLuint shader_program, const char* pShaderText, GLenum ShaderType)
 {
     GLuint ShaderObj = glCreateShader(ShaderType);
@@ -37,7 +35,7 @@ static void add_shader(GLuint shader_program, const char* pShaderText, GLenum Sh
     glAttachShader(shader_program, ShaderObj);
 }
 
-int compile_shaders()
+int compile_shaders(t_globals *g)
 {
     GLuint shader_program = glCreateProgram();
 
@@ -61,19 +59,17 @@ int compile_shaders()
     };
     add_shader(shader_program, vs, GL_VERTEX_SHADER);
     add_shader(shader_program, fs, GL_FRAGMENT_SHADER);
-
     GLint Success = 0;
     GLchar ErrorLog[1024] = { 0 };
-
+    
     glLinkProgram(shader_program);
-
     glGetProgramiv(shader_program, GL_LINK_STATUS, &Success);
     if (Success == 0) {
         glGetProgramInfoLog(shader_program, sizeof(ErrorLog), NULL, ErrorLog);
         fprintf(stderr, "Error linking shader program: '%s'\n", ErrorLog);
         return (1);
     }
-
+    
     glValidateProgram(shader_program);
     glGetProgramiv(shader_program, GL_VALIDATE_STATUS, &Success);
     if (!Success) {
@@ -82,8 +78,9 @@ int compile_shaders()
         return (1);
     }
 
+
     glUseProgram(shader_program);
-    gWVPLocation = glGetUniformLocation(shader_program, "gWVP");
-    assert(gWVPLocation != 0xFFFFFFFF);
+    g->gWVPLocation = glGetUniformLocation(shader_program, "gWVP");
+    assert(g->gWVPLocation != 0xFFFFFFFF);
     return (0);
 }

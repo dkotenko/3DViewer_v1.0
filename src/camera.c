@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
-extern t_pipeline *p;
+t_pipeline *p;
 const static float STEP_SCALE = 1.0f;
 
 void t_camera_free(t_camera *camera)
@@ -31,28 +31,32 @@ void t_camera_print(t_camera *camera)
     t_vec3f_print(camera->Up, "up");
 }
 
-void t_camera_handle_key(t_camera *camera, int key)
+void t_camera_handle_key(t_scop *scop,  t_camera *camera, int key)
 {
+    if (key == -1) {
+        return ;
+    }
     t_vec3f temp;
+    p = scop->g->p;
 
     switch (key) {
-        case GLUT_KEY_RIGHT:
+        case SDLK_RIGHT:
             temp = Cross(camera->Up, camera->Target);
             temp = Normalize(temp);
             temp = t_vec3f_multf(temp, STEP_SCALE);
             camera->Pos = t_vec3f_sum(camera->Pos, temp);
             break ;
-        case GLUT_KEY_LEFT:
+        case SDLK_LEFT:
             temp =  Cross(camera->Target, camera->Up);
             temp = Normalize(temp);
             temp = t_vec3f_multf(temp, STEP_SCALE);
             camera->Pos = t_vec3f_sum(camera->Pos, temp);
             break ;
-        case GLUT_KEY_UP: 
+        case SDLK_UP: 
             temp = t_vec3f_multf(camera->Target, STEP_SCALE);
             camera->Pos = t_vec3f_sum(camera->Pos, temp);
             break ;
-        case GLUT_KEY_DOWN:
+        case SDLK_DOWN:
             temp = t_vec3f_multf(camera->Target, STEP_SCALE);
             camera->Pos = t_vec3f_sub(camera->Pos, temp);
             break ;
@@ -62,29 +66,25 @@ void t_camera_handle_key(t_camera *camera, int key)
         case GLUT_KEY_PAGE_DOWN:
             camera->Pos.y -= STEP_SCALE;
             break ;
-        case GLUT_KEY_HOME:
-            break ;
-        case GLUT_KEY_END:
-            break ;
-        case 'q':
+        case SDLK_INSERT:
             p->m_rotateInfo.y += STEP_SCALE;
             break ;
-        case 'w':
+        case SDLK_DELETE:
             p->m_rotateInfo.y -= STEP_SCALE;
             break ;
-        case 'a':
+        case SDLK_HOME:
             p->m_rotateInfo.z += STEP_SCALE;
             break ;
-        case 's':
+        case SDLK_END:
             p->m_rotateInfo.z -= STEP_SCALE;
             break ;
-        case 'z':
+        case SDLK_PAGEUP:
             p->m_rotateInfo.x += STEP_SCALE;
             break ;
-        case 'x':
+        case SDLK_PAGEDOWN:
             p->m_rotateInfo.x -= STEP_SCALE;
             break ;
-        case ' ':
+        case SDLK_SPACE:
             set_rotateInfo(p, 0.0f, 0.0f, 0.0f);
             break ;
 

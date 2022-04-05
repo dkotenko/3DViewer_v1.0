@@ -71,7 +71,6 @@ void init_mesh_gl(t_mesh *mesh)
 {
     //NumIndices = Indices.size();
     int vertices_size = cvector_size(mesh->vertices_to_draw);
-    printf("%d\n", vertices_size);
     
     glGenBuffers(1, &mesh->VB);
     glBindBuffer(GL_ARRAY_BUFFER, mesh->VB);
@@ -97,7 +96,6 @@ bool load_mesh(t_mesh *mesh, char *filename)
     } else {
         get_default_mesh(mesh);
     }
-    init_mesh_gl(mesh);
     return true;
 }
 

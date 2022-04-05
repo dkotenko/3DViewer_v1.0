@@ -1,6 +1,5 @@
 #include "scop.h"
 
-#include <SDL2/SDL.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -28,6 +27,8 @@
 static  char logbuf[64000];
 static   int logbuf_updated = 0;
 static float bg[3] = { 90, 95, 100 };
+
+
 
 
 static void write_log(const char *text) {
@@ -331,141 +332,20 @@ static const char key_map[256] = {
 };
 
 
-static int text_width(mu_Font font, const char *text, int len) {
+int text_width(mu_Font font, const char *text, int len) {
   if (len == -1) { len = strlen(text); }
   (void)font;
   return r_get_text_width(text, len);
 }
 
-static int text_height(mu_Font font) {
+int text_height(mu_Font font) {
   (void)font;
   return r_get_text_height();
 }
 
-int init_microui(mu_Context **ctx)
+void microui_render(mu_Context *ctx)
 {
-  /* init microui */
-  r_init();
-  *ctx = malloc(sizeof(mu_Context));
-  mu_init(*ctx);
-  *ctx->text_width = text_width;
-  *ctx->text_height = text_height;
-}
-
-int init_gui() {
-  if( SDL_Init( SDL_INIT_EVERYTHING ) < 0 )
-	{
-		printf( "SDL could not initialize! SDL Error: %s\n", SDL_GetError() );
-    return 0;
-	}
-
-  gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
-  if( gWindow == NULL )
-  {
-    printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
-    return (0);
-  }
-
-  gContext = SDL_GL_CreateContext( gWindow );
-  if( gContext == NULL )
-  {
-    printf( "OpenGL context could not be created! SDL Error: %s\n", SDL_GetError() );
-    success = false;
-  }
-
-  glewExperimental = GL_TRUE; 
-  GLenum glewError = glewInit();
-  if( glewError != GLEW_OK )
-  {
-    printf( "Error initializing GLEW! %s\n", glewGetErrorString( glewError ) );
-    return 0;
-  }
-
-  //Use Vsync
-  if( SDL_GL_SetSwapInterval( 1 ) < 0 )
-  {
-    printf( "Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError() );
-    return 0;
-  }
-
-  //Initialize OpenGL
-  if( !initGL() )
-  {
-    printf( "Unable to initialize OpenGL!\n" );
-    return 0;
-  }
-
-  if (!init_microui()) {
-    printf( "Unable to initialize microUI!\n" );
-    return 0;
-  }
-  return 1;
-}
-  /*
-    if(!load_mesh(&mesh, filename)) {
-        return (0);
-    }
-    */
-
-void handleKeys(unsigned char key, int x, int y )
-{
-  switch (e.type) {
-    case SDL_QUIT: exit(EXIT_SUCCESS); break;
-    case SDL_MOUSEMOTION: mu_input_mousemove(ctx, e.motion.x, e.motion.y); break;
-    case SDL_MOUSEWHEEL: mu_input_scroll(ctx, 0, e.wheel.y * -30); break;
-    case SDL_TEXTINPUT: mu_input_text(ctx, e.text.text); break;
-
-    case SDL_MOUSEBUTTONDOWN:
-    case SDL_MOUSEBUTTONUP: {
-      int b = button_map[e.button.button & 0xff];
-      if (b && e.type == SDL_MOUSEBUTTONDOWN) { mu_input_mousedown(ctx, e.button.x, e.button.y, b); }
-      if (b && e.type ==   SDL_MOUSEBUTTONUP) { mu_input_mouseup(ctx, e.button.x, e.button.y, b);   }
-      break;
-    }
-
-    case SDL_KEYDOWN:
-    case SDL_KEYUP: {
-      int c = key_map[e.key.keysym.sym & 0xff];
-      if (c && e.type == SDL_KEYDOWN) { mu_input_keydown(ctx, c); }
-      if (c && e.type ==   SDL_KEYUP) { mu_input_keyup(ctx, c);   }
-      break;
-    }
-  }
-}
-
-int run_gui(void) {
-
-  bool is_running = true;
-  SDL_Event e;
-  SDL_StartTextInput();
-  /* main loop */
-  while (is_running) {
-    /* handle SDL events */
-    
-    while (SDL_PollEvent(&e)) {
-      if (e.type == SDL_QUIT) {
-        is_running(false);
-      } else if (e.type == SDL_TEXTINPUT) {
-        int x = 0, y = 0;
-        SDL_GetMouseState( &x, &y );
-				handleKeys( e.text.text[ 0 ], x, y );
-      }
-    }
-    render();
-    SDL_GL_SwapWindow (gWindow);
-  }
-
-  
-
-      
-      SDL_StopTextInput();
-      close();
-      return (1);
-    }
-    
-  
-
-    /* process frame */
+  /* process frame */
     process_frame(ctx);
 
     /* render */
@@ -480,8 +360,7 @@ int run_gui(void) {
       }
     }
     r_present();
-  }
-
-  return 0;
 }
+
+
 

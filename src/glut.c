@@ -7,7 +7,7 @@
 #include "scop.h"
 #include "s21_matrix.h"
 
-GLuint gWVPLocation;
+extern GLuint gWVPLocation;
 
 t_camera *pGameCamera;
 PersProjInfo gPersProjInfo;
@@ -107,8 +107,6 @@ int handle_glut(t_mesh *mesh)
 {
     g_mesh = mesh;
     p = t_pipeline_new();
-    
-    
     pGameCamera = t_camera_new(WINDOW_WIDTH, WINDOW_HEIGHT);
     
     

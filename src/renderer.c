@@ -18,12 +18,13 @@ static int buf_idx;
 static SDL_Window *window;
 
 
-void r_init(void) {
+void r_init(SDL_Window* gWindow) {
   /* init SDL window */
-  window = SDL_CreateWindow(
+  window = gWindow;
+  /*SDL_CreateWindow(
     NULL, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-    width, height, SDL_WINDOW_OPENGL);
-  SDL_GL_CreateContext(window);
+    width, height, SDL_WINDOW_OPENGL); */
+  //SDL_GL_CreateContext(window);
 
   /* init gl */
   glEnable(GL_BLEND);
