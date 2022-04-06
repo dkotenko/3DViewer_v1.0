@@ -21,6 +21,8 @@
 #define CVECTOR_LOGARITHMIC_GROWTH
 
 #define is_space(c) c == ' ' || c == '\t'
+#define skip_spaces(s) while (*s && isspace(*s)) {*s++;}
+#define skip_non_spaces(s) while (*s && !isspace(*s)) {*s++;}
 
 #define NO_ELEMENT -1
 /*
@@ -60,8 +62,7 @@ void parse_vt(char *s, t_mesh *mesh)
     cvector_push_back(mesh->textures, new);
 }
 
-#define skip_spaces(s) while (*s && isspace(*s)) {*s++;}
-#define skip_non_spaces(s) while (*s && !isspace(*s)) {*s++;}
+
 
 static int	count_words(char const *s)
 {
@@ -238,15 +239,98 @@ int parse_file(char *filename, t_mesh *mesh)
     return EXIT_SUCCESS;
 }
 
-void print_parse_result(t_mesh *mesh)
+void print_parse_result(t_scop *scop)
 {
-    if (!DEBUG) {
+    if (!scop->config.debug) {
         return ;
     }
+
+    t_mesh *mesh = scop->mesh;
     printf("faces: %d\n", (int)cvector_size(mesh->faces) - 1);
     printf("vertices: %d\n", (int)cvector_size(mesh->vertices) - 1);
     printf("textures: %d\n", (int)cvector_size(mesh->textures) - 1);
     printf("normals: %d\n", (int)cvector_size(mesh->normals) - 1);
 }
 
+int len_s;
 
+static int startswith(char *s, char *pattern)
+{
+	int len_p = strlen(pattern);
+
+	if (len_p > len_s) {
+		return 0;
+	}
+	return !strncmp(s, pattern, len_s);
+}
+
+static int parse_int(char *s, char *pattern, int *value) {
+    skip_non_spaces(s);
+    skip_spaces(s);
+    if (!*s) {
+        return;
+    }
+    *value = atoi(s);
+}
+
+static void parse_string(char *s, char *pattern, char **value) {
+    skip_non_spaces(s);
+    skip_spaces(s);
+    if (!*s) {
+        return;
+    }
+    if (*value) {
+        free(*value);
+    }
+    *value = strdup(s);
+}
+
+void parse_config_content(char *s, t_config *config)
+{
+	len_s = strlen(s);
+
+	if (startswith(s, "window_width")) {
+        parse_int(s, "window_width", &config.window_width);
+	} else if (startswith(s, "window_height") {
+        parse_int(s, "window_height", &config.window_height);
+	} else if (startswith(s, "debug") {
+        parse_int(s, "debug", &config.debug);
+	} else if (startswith(s, "window_start_x") {
+        parse_int(s, "window_start_x", &config.window_start_x);
+	} else if (startswith(s, "window_start_y") {
+        parse_int(s, "window_start_y", &config.window_start_y);
+	} else if (startswith(s, "app_name") {
+        parse_string(s, "app_name", &config.app_name);
+	}
+}
+
+int parse_config_file(t_config *config)
+{
+    char *line_buf = NULL;
+    size_t line_buf_size = 0;
+    int line_count = 0;
+    ssize_t line_size;
+
+    FILE *fp = fopen(config->app_name, "r");
+    if (!fp)
+    {
+        fprintf(stderr, "Error opening file '%s'\n", filename);
+        return EXIT_FAILURE;
+    }
+    
+    line_size = getline(&line_buf, &line_buf_size, fp);
+    while (line_size >= 0)
+    {
+        line_count++;
+        parse_config_content(line_buf, config);
+        free(line_buf);
+        line_buf = NULL;
+        line_size = getline(&line_buf, &line_buf_size, fp);
+    }
+    if (line_buf) {
+        free(line_buf);
+    }
+    line_buf = NULL;
+    fclose(fp);
+    return 0;
+}

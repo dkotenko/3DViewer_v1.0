@@ -21,13 +21,13 @@ int main(int ac, char **av)
     t_scop scop = {0};
     t_mesh mesh = {0};
     t_globals g = {0};
-    mu_Context ctx;;
+    t_config c = {0};
     scop.mesh = &mesh;
     scop.g = &g;
-
+    scop.config = &c;
     
-    init(&scop, filename, &ctx);
-    !run(&scop, filename, &ctx);
+    init(&scop, filename);
+    !run(&scop, filename, scop.g->mui_ctx);
     exit(0);
     return (0);
 }

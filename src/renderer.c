@@ -11,8 +11,8 @@ static GLfloat  vert_buf[BUFFER_SIZE *  8];
 static GLubyte color_buf[BUFFER_SIZE * 16];
 static GLuint  index_buf[BUFFER_SIZE *  6];
 
-static int width  = 800;
-static int height = 600;
+static int width  = WINDOW_WIDTH;
+static int height = WINDOW_HEIGHT;
 static int buf_idx;
 
 static SDL_Window *window;
@@ -175,12 +175,12 @@ void r_set_clip_rect(mu_Rect rect) {
 
 void r_clear(mu_Color clr) {
   flush();
-  glClearColor(clr.r / 255., clr.g / 255., clr.b / 255., clr.a / 255.);
-  glClear(GL_COLOR_BUFFER_BIT);
+  //glClearColor(clr.r / 255., clr.g / 255., clr.b / 255., clr.a / 255.);
+  //glClear(GL_COLOR_BUFFER_BIT);
 }
 
 
 void r_present(void) {
   flush();
-  SDL_GL_SwapWindow(window);
+  //SDL_GL_SwapWindow(window);
 }

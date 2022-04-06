@@ -112,7 +112,7 @@ int handle_glut(t_mesh *mesh)
     
     //51,76,76,255 - cadetblue / orange
     glClearColor(51.0f / 256.0f, 76.0f/256.0f, 76.0f/256.0f, 1.0f);
-    init_mesh_gl(g_mesh);
+    init_gl_buffers(g_mesh);
 
     if (compile_shaders()) {
         fprintf(stderr, "%s\n", "Error during shader compiling");

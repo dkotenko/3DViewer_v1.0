@@ -67,21 +67,7 @@ void get_default_mesh(t_mesh *mesh)
     populate_f(mesh);
 }
 
-void init_mesh_gl(t_mesh *mesh)
-{
-    //NumIndices = Indices.size();
-    int vertices_size = cvector_size(mesh->vertices_to_draw);
-    
-    glGenBuffers(1, &mesh->VB);
-    glBindBuffer(GL_ARRAY_BUFFER, mesh->VB);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(t_vertex) * vertices_size, mesh->vertices_to_draw, GL_STATIC_DRAW);
-        
-    /*
-        glGenBuffers(1, &IB);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * NumIndices, &Indices[0], GL_STATIC_DRAW);
-    */
-}
+
 
 bool load_mesh(t_mesh *mesh, char *filename)
 {

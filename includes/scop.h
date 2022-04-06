@@ -10,16 +10,8 @@
 #include "microui.h"
 #include "renderer.h"
 
-#define DEBUG 0
-#define WINDOW_WIDTH 640       
-#define WINDOW_HEIGHT 480
-#define WINDOW_START_X 200
-#define WINDOW_START_Y 100
-#define APP_NAME "3DViewer_V1.0"
-
-
-
 #define here() printf("HERE\n");
+#define CFG_FILENAME "scop.cfg"
 
 typedef struct {
     t_vec3f Pos;
@@ -79,11 +71,22 @@ typedef struct {
     SDL_Window* gWindow;
     GLuint gWVPLocation;
     const Uint8	*state;
+    mu_Context *mui_ctx;
 } t_globals;
+
+typedef struct {
+    int debug; //0
+    int window_width; //640       
+    int window_height; //480
+    int window_start_x; //200
+    int window_start_y ;//100
+    const char *app_name; //"3DViewer_V1.0"
+} t_config;
 
 typedef struct {
     t_mesh *mesh;
     t_globals *g;
+    t_config *config;
 } t_scop;
 
 
@@ -152,7 +155,7 @@ void t_face_transport_print(t_face_transport *t, char *label);
 void t_face_print(t_face *face, char *label);
 void t_vertex_index_print(t_vertex_index vi);
 void t_vertex_print(t_vertex vertex);
-void init_mesh_gl(t_mesh *mesh);
+void init_gl_buffers(t_mesh *mesh);
 void t_pipeline_print(t_pipeline *p);
 void clear_mesh(t_mesh *mesh);
 bool load_mesh(t_mesh *mesh, char *filename);
@@ -167,5 +170,5 @@ int text_width(mu_Font font, const char *text, int len);
 
 
 
-int init(t_scop *scop, char *filename, mu_Context *ctx);
+int init(t_scop *scop, char *filename);
 #endif

@@ -128,7 +128,8 @@ static void draw_frame(mu_Context *ctx, mu_Rect rect, int colorid) {
 
 
 void mu_init(mu_Context *ctx) {
-  memset(ctx, 0, sizeof(*ctx));
+  //mu_Context *new_ctx = calloc(1, sizeof(mu_Context));
+  //memset(new_ctx, 0, sizeof(mu_Context));
   ctx->draw_frame = draw_frame;
   ctx->_style = default_style;
   ctx->style = &ctx->_style;

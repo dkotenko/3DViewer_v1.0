@@ -44,7 +44,7 @@ SRCS_NOT_TEST = \
 	main.c \
 	parser.c \
 	vector.c \
-	utils.c \
+	config.c \
 	camera.c \
 	math.c \
 	pipeline.c \
