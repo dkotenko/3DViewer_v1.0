@@ -64,8 +64,8 @@ typedef struct {
 } t_obj;
 
 int parse_file(char *filename, t_mesh *mesh);
-void print_parse_result(t_scop *scop);
 void draw_mesh(t_mesh *mesh);
 void get_default_mesh(t_mesh *mesh);
 void populate_f(t_mesh *mesh);
+
 #endif

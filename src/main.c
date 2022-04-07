@@ -6,7 +6,7 @@
 #include "s21_matrix.h"
 
 
-
+t_config *g_config;
 
 int main(int ac, char **av)
 {
@@ -25,6 +25,7 @@ int main(int ac, char **av)
     scop.mesh = &mesh;
     scop.g = &g;
     scop.config = &c;
+    g_config = &c;
     
     init(&scop, filename);
     !run(&scop, filename, scop.g->mui_ctx);

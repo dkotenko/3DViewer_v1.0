@@ -38,9 +38,9 @@ static void write_log(const char *text) {
 }
 
 
-static void test_window(mu_Context *ctx) {
+static void test_window(mu_Context *ctx, char *app_name) {
   /* do window */
-  if (mu_begin_window(ctx, APP_NAME, mu_rect(40, 0, 300, 550))) {
+  if (mu_begin_window(ctx, app_name, mu_rect(40, 0, 300, 550))) {
     mu_Container *win = mu_get_current_container(ctx);
     win->rect.w = mu_max(win->rect.w, 240);
     win->rect.h = mu_max(win->rect.h, 300);
@@ -304,11 +304,11 @@ static void style_window(mu_Context *ctx) {
 }
 
 
-static void process_frame(mu_Context *ctx) {
+static void process_frame(mu_Context *ctx, char *app_name) {
   mu_begin(ctx);
   style_window(ctx);
   log_window(ctx);
-  test_window(ctx);
+  test_window(ctx, app_name);
   mu_end(ctx);
 }
 
@@ -332,7 +332,7 @@ static const char key_map[256] = {
 };
 
 
-int text_width(mu_Font font, const char *text, int len) {
+int text_width(mu_Font font, char *text, int len) {
   if (len == -1) { len = strlen(text); }
   (void)font;
   return r_get_text_width(text, len);
@@ -343,10 +343,10 @@ int text_height(mu_Font font) {
   return r_get_text_height();
 }
 
-void microui_render(mu_Context *ctx)
+void microui_render(mu_Context *ctx, char *app_name)
 {
   /* process frame */
-    process_frame(ctx);
+    process_frame(ctx, app_name);
 
     /* render */
     r_clear(mu_color(bg[0], bg[1], bg[2], 255));

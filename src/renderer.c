@@ -11,16 +11,18 @@ static GLfloat  vert_buf[BUFFER_SIZE *  8];
 static GLubyte color_buf[BUFFER_SIZE * 16];
 static GLuint  index_buf[BUFFER_SIZE *  6];
 
-static int width  = WINDOW_WIDTH;
-static int height = WINDOW_HEIGHT;
+static int width;
+static int height;
 static int buf_idx;
 
 static SDL_Window *window;
 
 
-void r_init(SDL_Window* gWindow) {
+void r_init(SDL_Window* gWindow, int window_width, int window_height) {
   /* init SDL window */
   window = gWindow;
+  width = window_width;
+  height = window_height;
   /*SDL_CreateWindow(
     NULL, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
     width, height, SDL_WINDOW_OPENGL); */

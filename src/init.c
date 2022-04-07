@@ -2,10 +2,12 @@
 #include "cvector.h"
 #include <string.h>
 
+extern t_config *g_config;
+
 int init_microui(SDL_Window* gWindow, mu_Context **ctx)
 {
   /* init microui */
-  r_init(gWindow);
+  r_init(gWindow, g_config->window_width, g_config->window_height);
   mu_Context *ctx_new = malloc(sizeof(mu_Context));
   mu_init(ctx_new);
   ctx_new->text_width =  text_width;
@@ -13,7 +15,7 @@ int init_microui(SDL_Window* gWindow, mu_Context **ctx)
   *ctx = ctx_new;
 }
 
-int initSDL(t_globals *g)
+int initSDL(t_globals *g, t_config *config)
 {
   if(SDL_Init(SDL_INIT_EVERYTHING) < 0)
   {
@@ -21,7 +23,13 @@ int initSDL(t_globals *g)
     return 0;
   }
   
-  g->gWindow = SDL_CreateWindow( APP_NAME, WINDOW_START_X, WINDOW_START_Y, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
+  g->gWindow = SDL_CreateWindow( \
+    config->app_name, \
+    config->window_start_x, \
+    config->window_start_y, \
+    config->window_width, \
+    config->window_height, \
+     SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
   if( g->gWindow == NULL )
   {
     printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
@@ -66,7 +74,8 @@ int initGL(t_scop *scop)
     
     scop->g->p = t_pipeline_new();
     //printf("%d\n", scop->g->p == NULL); 
-    scop->g->pGameCamera = t_camera_new(WINDOW_WIDTH, WINDOW_HEIGHT);
+    scop->g->pGameCamera = t_camera_new(scop->config->window_width,\
+    scop->config->window_height);
     
     
     //51,76,76,255 - cadetblue / orange
@@ -78,8 +87,8 @@ int initGL(t_scop *scop)
         return (0);
     }
     scop->g->gPersProjInfo.FOV = 60.0f;
-    scop->g->gPersProjInfo.Height = WINDOW_HEIGHT;
-    scop->g->gPersProjInfo.Width = WINDOW_WIDTH;
+    scop->g->gPersProjInfo.Height = scop->config->window_height;
+    scop->g->gPersProjInfo.Width = scop->config->window_width;
     scop->g->gPersProjInfo.zNear = 1.0f;
     scop->g->gPersProjInfo.zFar = 100.0f;
     return 1;
@@ -111,7 +120,7 @@ int init(t_scop *scop, char *filename)
 
     init_config(scop->config);
 
-    if(!initSDL(scop->g)) {
+    if(!initSDL(scop->g, scop->config)) {
         printf( "Unable to initialize SDL!\n" );
         return 0;       
     }

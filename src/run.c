@@ -69,7 +69,7 @@ int run(t_scop *scop, char *filename, mu_Context *ctx) {
     }
     handle_animation(scop->g);
     render_scene(scop);
-    microui_render(ctx);
+    microui_render(ctx, scop->config->app_name);
     SDL_GL_SwapWindow (scop->g->gWindow);
   }   
   SDL_StopTextInput();

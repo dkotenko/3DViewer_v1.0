@@ -80,7 +80,7 @@ typedef struct {
     int window_height; //480
     int window_start_x; //200
     int window_start_y ;//100
-    const char *app_name; //"3DViewer_V1.0"
+    char *app_name; //"3DViewer_V1.0"
 } t_config;
 
 typedef struct {
@@ -164,11 +164,14 @@ bool load_mesh(t_mesh *mesh, char *filename);
 **
 */
 int run(t_scop *scop, char *filename, mu_Context *ctx);
-void microui_render(mu_Context *ctx);
+void microui_render(mu_Context *ctx, char *app_name);
 int text_height(mu_Font font);
-int text_width(mu_Font font, const char *text, int len);
+int text_width(mu_Font font, char *text, int len);
 
 
 
 int init(t_scop *scop, char *filename);
+
+void print_parse_result(t_scop *scop);
+int parse_config_file(t_config *config);
 #endif

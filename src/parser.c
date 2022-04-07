@@ -241,7 +241,7 @@ int parse_file(char *filename, t_mesh *mesh)
 
 void print_parse_result(t_scop *scop)
 {
-    if (!scop->config.debug) {
+    if (!scop->config->debug) {
         return ;
     }
 
@@ -264,7 +264,7 @@ static int startswith(char *s, char *pattern)
 	return !strncmp(s, pattern, len_s);
 }
 
-static int parse_int(char *s, char *pattern, int *value) {
+static void parse_int(char *s, char *pattern, int *value) {
     skip_non_spaces(s);
     skip_spaces(s);
     if (!*s) {
@@ -290,17 +290,17 @@ void parse_config_content(char *s, t_config *config)
 	len_s = strlen(s);
 
 	if (startswith(s, "window_width")) {
-        parse_int(s, "window_width", &config.window_width);
-	} else if (startswith(s, "window_height") {
-        parse_int(s, "window_height", &config.window_height);
-	} else if (startswith(s, "debug") {
-        parse_int(s, "debug", &config.debug);
-	} else if (startswith(s, "window_start_x") {
-        parse_int(s, "window_start_x", &config.window_start_x);
-	} else if (startswith(s, "window_start_y") {
-        parse_int(s, "window_start_y", &config.window_start_y);
-	} else if (startswith(s, "app_name") {
-        parse_string(s, "app_name", &config.app_name);
+        parse_int(s, "window_width", &config->window_width);
+	} else if (startswith(s, "window_height")) {
+        parse_int(s, "window_height", &config->window_height);
+	} else if (startswith(s, "debug")) {
+        parse_int(s, "debug", &config->debug);
+	} else if (startswith(s, "window_start_x")) {
+        parse_int(s, "window_start_x", &config->window_start_x);
+	} else if (startswith(s, "window_start_y")) {
+        parse_int(s, "window_start_y", &config->window_start_y);
+	} else if (startswith(s, "app_name")) {
+        parse_string(s, "app_name", &config->app_name);
 	}
 }
 
@@ -314,7 +314,7 @@ int parse_config_file(t_config *config)
     FILE *fp = fopen(config->app_name, "r");
     if (!fp)
     {
-        fprintf(stderr, "Error opening file '%s'\n", filename);
+        fprintf(stderr, "Error opening file '%s'\n", CFG_FILENAME);
         return EXIT_FAILURE;
     }
     
@@ -333,4 +333,42 @@ int parse_config_file(t_config *config)
     line_buf = NULL;
     fclose(fp);
     return 0;
+}
+
+#include "scop.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+char *read_file(char *filename)
+{
+	FILE *fp;
+	long lSize;
+	char *buffer;
+
+	fp = fopen (filename, "rb");
+	if( !fp ) {
+		perror(filename);
+		return(0);
+	} 
+
+	fseek( fp , 0L , SEEK_END);
+	lSize = ftell( fp );
+	rewind( fp );
+
+	buffer = calloc( 1, lSize+1 );
+	if( !buffer ) {
+		fclose(fp);
+		fputs("read_file: memory alloc fails",stderr);
+		return(0);
+	} 
+
+	/* copy the file into the buffer */
+	if(1 != fread( buffer , lSize, 1 , fp)) {
+		fclose(fp);
+		free(buffer);
+		fputs("read_file: entire read fails",stderr);
+		return(0);
+	}
+	fclose(fp);
+	return buffer;
 }
