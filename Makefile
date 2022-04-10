@@ -30,9 +30,7 @@ HEADERS_FILES=\
 	cvector.h \
 	scop.h \
 	vector.h \
-	microui.h \
-	renderer.h \
-	# $(NAME).h
+	utils.h
 #############################
 
 
@@ -51,11 +49,9 @@ SRCS_NOT_TEST = \
 	shader.c \
 	mesh.c \
 	print.c \
-	gui.c \
-	renderer.c \
-	microui.c \
 	run.c \
-	init.c
+	init.c \
+	utils.c
 
 SRCS_FILES=$(SRCS_FOR_TEST) $(SRCS_NOT_TEST)
 #############################
@@ -85,11 +81,9 @@ REPORT_NAME=report.html
 
 
 FLAGS:=-lGLEW -lGLU -lGL -lglut
-FLAGS:=$(FLAGS) -std=c11
-FLAGS:=$(FLAGS) -Wall -Wextra -Werror
 FLAGS:=$(FLAGS) -pedantic `sdl2-config --libs` -lGL -lm -O3 -g 
 
-CC=gcc 
+CC=gcc -std=c11 -Wall -Wextra -Werror
 CC_GCOV=gcc -Wall -Wextra -Werror -std=c11 \
 -fcf-protection=full -static-libgcc --coverage -lgcov
 THREADS = 8

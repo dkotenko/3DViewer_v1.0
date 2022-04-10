@@ -4,17 +4,6 @@
 
 extern t_config *g_config;
 
-int init_microui(SDL_Window* gWindow, mu_Context **ctx)
-{
-  /* init microui */
-  r_init(gWindow, g_config->window_width, g_config->window_height);
-  mu_Context *ctx_new = malloc(sizeof(mu_Context));
-  mu_init(ctx_new);
-  ctx_new->text_width =  text_width;
-  ctx_new->text_height = text_height;
-  *ctx = ctx_new;
-}
-
 int initSDL(t_globals *g, t_config *config)
 {
   if(SDL_Init(SDL_INIT_EVERYTHING) < 0)
@@ -103,7 +92,7 @@ void init_config(t_config *config)
     config->debug = 0;
     config->window_start_x = 200;
     config->window_start_y = 100;
-    config->app_name = strdup("3DViewer_V1.0");
+    config->app_name = ft_strdup("3DViewer_V1.0");
 
     parse_config_file(config);
 }
@@ -129,11 +118,6 @@ int init(t_scop *scop, char *filename)
     if(!initGL(scop))
     {
         printf( "Unable to initialize OpenGL!\n" );
-        return 0;
-    }    
-    
-    if (!init_microui(scop->g->gWindow, &scop->g->mui_ctx)) {
-        printf( "Unable to initialize microUI!\n" );
         return 0;
     }
 

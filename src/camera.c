@@ -5,14 +5,14 @@
 #include <GL/freeglut.h>
 
 t_pipeline *p;
-const static float STEP_SCALE = 1.0f;
+float STEP_SCALE = 1.0f;
 
 void t_camera_free(t_camera *camera)
 {
     free(camera);
 }
 
-t_camera *t_camera_new(int width, int height)
+t_camera *t_camera_new()
 {
     t_camera *camera;
 

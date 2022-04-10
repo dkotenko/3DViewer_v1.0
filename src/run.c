@@ -20,12 +20,6 @@ void handleKeys(t_scop *scop)
     t_camera_handle_key(scop, scop->g->pGameCamera, key);
 }
 
-void handle_animation(t_globals *g)
-{
-    //int scale = 0.0;
-    //set_rotateInfo(g->p, 0.0f, scale, 0.0f);
-}
-
 void render_scene(t_scop *scop)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -48,14 +42,12 @@ void clean_after_run(t_globals *g)
 
 
 
-int run(t_scop *scop, char *filename, mu_Context *ctx) {
+int run(t_scop *scop) {
 
   is_running = true;
   SDL_Event e = {0};
   SDL_StartTextInput();
-  /* main loop */
   while (is_running) {
-    /* handle SDL events */
     
     while (SDL_PollEvent(&e)) {
 
@@ -64,12 +56,9 @@ int run(t_scop *scop, char *filename, mu_Context *ctx) {
       } else if (e.type == SDL_KEYDOWN)
         {
             handleKeys(scop);
-            //handleKeys( e.text.text[ 0 ], x, y );
         }
     }
-    handle_animation(scop->g);
     render_scene(scop);
-    microui_render(ctx, scop->config->app_name);
     SDL_GL_SwapWindow (scop->g->gWindow);
   }   
   SDL_StopTextInput();

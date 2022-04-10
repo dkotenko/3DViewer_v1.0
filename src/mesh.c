@@ -6,7 +6,7 @@
 
 void clear_mesh(t_mesh *mesh)
 {
-    for (int i = 0; i < cvector_size(mesh->faces); i++) {
+    for (long unsigned int i = 0; i < cvector_size(mesh->faces); i++) {
         _free(mesh->faces_transport[i].indices);
         _free(mesh->faces[i].vertices);
     }

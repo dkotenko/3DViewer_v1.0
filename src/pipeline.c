@@ -93,6 +93,7 @@ void set_camera(t_pipeline *p, t_camera *camera)
     set_camera_attr(p, camera->Pos, camera->Target, camera->Up);
 }
 
+/*
 void init_orientation()
 {
     t_orientation orientation;
@@ -101,6 +102,7 @@ void init_orientation()
     orientation.m_rotateInfo = t_vec3f_new(0.0f, 0.0f, 0.0f);
     orientation.m_worldPos      = t_vec3f_new(0.0f, 0.0f, 0.0f);
 }
+*/
 
 void set_orient(t_pipeline *p, t_orientation o)
 {
@@ -125,7 +127,7 @@ matrix_t GetWorldTrans(t_pipeline *p)
     }
     */
     p->m_Wtransformation = s21_mult_matrix(&TranslationTrans, &RotateTrans);
-    matrix_t temp = p->m_Wtransformation;
+    //matrix_t temp = p->m_Wtransformation;
     p->m_Wtransformation = s21_mult_matrix(&p->m_Wtransformation, &ScaleTrans);
     //s21_free_matrix_array(temp->matrix, 4);
     return p->m_Wtransformation;
@@ -152,8 +154,9 @@ matrix_t GetVPTrans(t_pipeline *p)
 {
     GetViewTrans(p);
     GetProjTrans(p);
-    matrix_t t = p->m_VPtransformation;
+    //matrix_t t = p->m_VPtransformation;
     p->m_VPtransformation = s21_mult_matrix(&p->m_ProjTransformation, &p->m_Vtransformation);
+    
     //s21_free_matrix(&t, 4);
     return p->m_VPtransformation;
 }

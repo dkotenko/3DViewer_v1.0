@@ -1,3 +1,5 @@
+#define  _POSIX_C_SOURCE 200809L
+
 #include "scop.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,8 +23,8 @@
 #define CVECTOR_LOGARITHMIC_GROWTH
 
 #define is_space(c) c == ' ' || c == '\t'
-#define skip_spaces(s) while (*s && isspace(*s)) {*s++;}
-#define skip_non_spaces(s) while (*s && !isspace(*s)) {*s++;}
+#define skip_spaces(s) while (*s && isspace(*s)) {s++;}
+#define skip_non_spaces(s) while (*s && !isspace(*s)) {s++;}
 
 #define NO_ELEMENT -1
 /*
@@ -138,7 +140,7 @@ void parse_f(char *s, t_mesh *mesh)
         cvector_push_back(mesh->faces_transport, face);
     } else {
         t_face_transport *faces = split_face(&face);
-        for (int i = 0; i < cvector_size(faces); i++) {
+        for (long unsigned int i = 0; i < cvector_size(faces); i++) {
             cvector_push_back(mesh->faces_transport, faces[i]);
         }
     }
@@ -264,7 +266,7 @@ static int startswith(char *s, char *pattern)
 	return !strncmp(s, pattern, len_s);
 }
 
-static void parse_int(char *s, char *pattern, int *value) {
+static void parse_int(char *s, int *value) {
     skip_non_spaces(s);
     skip_spaces(s);
     if (!*s) {
@@ -273,7 +275,7 @@ static void parse_int(char *s, char *pattern, int *value) {
     *value = atoi(s);
 }
 
-static void parse_string(char *s, char *pattern, char **value) {
+static void parse_string(char *s, char **value) {
     skip_non_spaces(s);
     skip_spaces(s);
     if (!*s) {
@@ -282,7 +284,7 @@ static void parse_string(char *s, char *pattern, char **value) {
     if (*value) {
         free(*value);
     }
-    *value = strdup(s);
+    *value = ft_strdup(s);
 }
 
 void parse_config_content(char *s, t_config *config)
@@ -290,17 +292,17 @@ void parse_config_content(char *s, t_config *config)
 	len_s = strlen(s);
 
 	if (startswith(s, "window_width")) {
-        parse_int(s, "window_width", &config->window_width);
+        parse_int(s, &config->window_width);
 	} else if (startswith(s, "window_height")) {
-        parse_int(s, "window_height", &config->window_height);
+        parse_int(s, &config->window_height);
 	} else if (startswith(s, "debug")) {
-        parse_int(s, "debug", &config->debug);
+        parse_int(s, &config->debug);
 	} else if (startswith(s, "window_start_x")) {
-        parse_int(s, "window_start_x", &config->window_start_x);
+        parse_int(s, &config->window_start_x);
 	} else if (startswith(s, "window_start_y")) {
-        parse_int(s, "window_start_y", &config->window_start_y);
+        parse_int(s, &config->window_start_y);
 	} else if (startswith(s, "app_name")) {
-        parse_string(s, "app_name", &config->app_name);
+        parse_string(s, &config->app_name);
 	}
 }
 

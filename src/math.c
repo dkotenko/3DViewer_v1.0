@@ -3,8 +3,10 @@
 #include "s21_matrix.h"
 #include "vector.h"
 
+#define M_PI 3.1415926f
 #define ToRadian(x) (float)(((x) * M_PI / 180.0f))
 #define ToDegree(x) (float)(((x) * 180.0f / M_PI))
+
 
 void InitRotationX(matrix_t *ScaleTrans, float x)
 {

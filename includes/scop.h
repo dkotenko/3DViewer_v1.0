@@ -9,6 +9,7 @@
 #include "parser.h"
 #include "microui.h"
 #include "renderer.h"
+#include "utils.h"
 
 #define here() printf("HERE\n");
 #define CFG_FILENAME "scop.cfg"
@@ -94,7 +95,7 @@ char *read_file(char *filename);
 int handle_glut(t_mesh *mesh);
 int compile_shaders();
 
-t_camera *t_camera_new(int width, int height);
+t_camera *t_camera_new();
 void t_camera_free(t_camera *camera);
 void t_camera_print(t_camera *camera);
 
@@ -163,8 +164,7 @@ bool load_mesh(t_mesh *mesh, char *filename);
 /*
 **
 */
-int run(t_scop *scop, char *filename, mu_Context *ctx);
-void microui_render(mu_Context *ctx, char *app_name);
+int run(t_scop *scop);
 int text_height(mu_Font font);
 int text_width(mu_Font font, char *text, int len);
 

@@ -3,9 +3,9 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <check.h>
 #define SUCCESS 1
 #define FAILURE 0
-#include <check.h>
 
 typedef enum {
     CORRECT_MATRIX = 0,

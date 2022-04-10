@@ -28,7 +28,9 @@ int main(int ac, char **av)
     g_config = &c;
     
     init(&scop, filename);
-    !run(&scop, filename, scop.g->mui_ctx);
+    if (!run(&scop)) {
+        printf("error during running, abort\n");
+    }
     exit(0);
     return (0);
 }
