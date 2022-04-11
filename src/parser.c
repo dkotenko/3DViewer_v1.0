@@ -313,7 +313,7 @@ int parse_config_file(t_config *config)
     int line_count = 0;
     ssize_t line_size;
 
-    FILE *fp = fopen(config->app_name, "r");
+    FILE *fp = fopen(CFG_FILENAME, "r");
     if (!fp)
     {
         fprintf(stderr, "Error opening file '%s'\n", CFG_FILENAME);
