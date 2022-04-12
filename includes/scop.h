@@ -74,6 +74,7 @@ typedef struct {
     GLuint gSampler;
     const Uint8	*state;
     mu_Context *mui_ctx;
+    char *texture_filename;
 } t_globals;
 
 typedef struct {

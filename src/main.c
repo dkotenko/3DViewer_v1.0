@@ -25,6 +25,7 @@ int main(int ac, char **av)
     scop.mesh = &mesh;
     scop.g = &g;
     scop.config = &c;
+    g.texture_filename = ft_strdup("resources/texture.jpg");
     g_config = &c;
     
     init(&scop, filename);

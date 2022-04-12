@@ -169,15 +169,22 @@ void populate_f(t_mesh *mesh)
             
             if (vertex_index != NO_ELEMENT) {
                 vertex_to_add.vertex = mesh->vertices[vertex_index];
+            } else {
+                vertex_to_add.vertex = t_vec3f_new(i, j, j);
             }
             
             int normal_index = t[i].indices[j].normal - 1;
             if (normal_index != NO_ELEMENT && (is_nor)) {
                 vertex_to_add.normal = mesh->normals[normal_index];
+            } else {
+                vertex_to_add.normal = Normalize(vertex_to_add.vertex);
             }
             int texture_index = t[i].indices[j].texture - 1;
             if (texture_index != NO_ELEMENT && (is_tex)) {
                 vertex_to_add.texture = mesh->textures[texture_index];
+            } else {
+                vertex_to_add.texture.x = vertex_to_add.normal.x;
+                vertex_to_add.texture.y = vertex_to_add.normal.y;
             }
             cvector_push_back(face.vertices, vertex_to_add);
             cvector_push_back(mesh->vertices_to_draw, vertex_to_add);

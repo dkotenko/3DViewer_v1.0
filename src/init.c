@@ -69,6 +69,9 @@ int initGL(t_scop *scop)
     
     //51,76,76,255 - cadetblue / orange
     glClearColor(51.0f / 256.0f, 76.0f/256.0f, 76.0f/256.0f, 1.0f);
+    glFrontFace(GL_CW);
+    glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
     init_gl_buffers(scop->mesh);
     
     if (compile_shaders(scop->g)) {
@@ -116,7 +119,8 @@ int init(t_scop *scop, char *filename)
         printf( "Unable to initialize OpenGL!\n" );
         return 0;
     }
-    t_texture *t = t_texture_new(GL_TEXTURE_2D, "resources/texture.jpg");
+    
+    t_texture *t = t_texture_new(GL_TEXTURE_2D, scop->g->texture_filename);
     t_texture_load(t);
     mesh->texture = t;
     
