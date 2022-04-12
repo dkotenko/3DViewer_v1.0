@@ -100,12 +100,8 @@ void init_config(t_config *config)
 int init(t_scop *scop, char *filename)
 {
     t_mesh *mesh = scop->mesh;
+    load_mesh(mesh, filename);
     
-    if (filename) {
-        load_mesh(mesh, filename);
-    } else {
-        get_default_mesh(mesh);
-    }
 
     init_config(scop->config);
 
@@ -120,7 +116,10 @@ int init(t_scop *scop, char *filename)
         printf( "Unable to initialize OpenGL!\n" );
         return 0;
     }
-
+    t_texture *t = t_texture_new(GL_TEXTURE_2D, "resources/texture.jpg");
+    t_texture_load(t);
+    mesh->texture = t;
+    
     //init_gl_buffers(mesh);
 
     return 1;

@@ -32,6 +32,15 @@ typedef struct {
 } t_face_transport;
 
 typedef struct {
+    GLenum type;
+    char *filename;
+    GLuint obj;
+    int width;
+    int height;
+    int bpp;
+} t_texture;
+
+typedef struct {
 	t_vertex *vertices_to_draw;
 	unsigned int *indices_to_draw;
 	t_vertex *vertices_orig;
@@ -43,6 +52,7 @@ typedef struct {
 	int material_index;
 	GLuint VB;
     GLuint IB;
+	t_texture *texture;
 } t_mesh;
 
 typedef struct {
@@ -64,7 +74,6 @@ typedef struct {
 } t_obj;
 
 int parse_file(char *filename, t_mesh *mesh);
-void draw_mesh(t_mesh *mesh);
 void get_default_mesh(t_mesh *mesh);
 void populate_f(t_mesh *mesh);
 

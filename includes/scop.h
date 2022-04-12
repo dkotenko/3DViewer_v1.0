@@ -71,6 +71,7 @@ typedef struct {
     SDL_GLContext *gContext;
     SDL_Window* gWindow;
     GLuint gWVPLocation;
+    GLuint gSampler;
     const Uint8	*state;
     mu_Context *mui_ctx;
 } t_globals;
@@ -168,10 +169,19 @@ int run(t_scop *scop);
 int text_height(mu_Font font);
 int text_width(mu_Font font, char *text, int len);
 
-
+/*
+** texture.c
+*/
+void t_texture_bind(t_texture *t, GLenum type);
+void t_texture_load(t_texture *t);
+t_texture *t_texture_new(GLenum type, char *filename);
 
 int init(t_scop *scop, char *filename);
 
 void print_parse_result(t_scop *scop);
 int parse_config_file(t_config *config);
+
+
+
+void draw_mesh(t_scop *scop);
 #endif

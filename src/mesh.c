@@ -4,6 +4,7 @@
 
 #define _free(a) if (a) free(a);
 
+
 void clear_mesh(t_mesh *mesh)
 {
     for (long unsigned int i = 0; i < cvector_size(mesh->faces); i++) {
@@ -19,8 +20,9 @@ void clear_mesh(t_mesh *mesh)
     memset(mesh, 0, sizeof(t_mesh));
 }
 
-void draw_mesh(t_mesh *mesh)
+void draw_mesh(t_scop *scop)
 {
+    t_mesh *mesh = scop->mesh;
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
@@ -29,6 +31,8 @@ void draw_mesh(t_mesh *mesh)
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(t_vertex), 0);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(t_vertex), (const GLvoid*)12);
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(t_vertex), (const GLvoid*)20);
+    
+    t_texture_bind(mesh->texture, GL_TEXTURE0);
     
     glDrawArrays(GL_TRIANGLES, 0, cvector_size(mesh->vertices_to_draw));
     //glDrawElements(GL_TRIANGLES, cvector_size(mesh->vertices), GL_UNSIGNED_INT, 0);
@@ -82,6 +86,7 @@ bool load_mesh(t_mesh *mesh, char *filename)
     } else {
         get_default_mesh(mesh);
     }
+    
     return true;
 }
 

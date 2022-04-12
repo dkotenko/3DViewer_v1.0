@@ -16,6 +16,18 @@ void handleKeys(t_scop *scop)
         key = SDLK_LEFT;
     } else if (s[SDL_SCANCODE_RIGHT]) {
         key = SDLK_RIGHT;
+    } else if (s[SDL_SCANCODE_INSERT]) {
+        key = SDLK_INSERT;
+    } else if (s[SDL_SCANCODE_DELETE]) {
+        key = SDLK_DELETE;
+    } else if (s[SDL_SCANCODE_PAGEUP]) {
+        key = SDLK_PAGEUP;
+    } else if (s[SDL_SCANCODE_PAGEDOWN]) {
+        key = SDLK_PAGEDOWN;
+    } else if (s[SDL_SCANCODE_HOME]) {
+        key = SDLK_HOME;
+    } else if (s[SDL_SCANCODE_END]) {
+        key = SDLK_END;
     }
     t_camera_handle_key(scop, scop->g->pGameCamera, key);
 }
@@ -29,7 +41,7 @@ void render_scene(t_scop *scop)
     
     const GLfloat* WVPTrans = (const GLfloat*)GetWVPTrans(scop->g->p);
     glUniformMatrix4fv(scop->g->gWVPLocation, 1, GL_TRUE, WVPTrans);
-    draw_mesh(scop->mesh);
+    draw_mesh(scop);
 }
 
 void clean_after_run(t_globals *g)

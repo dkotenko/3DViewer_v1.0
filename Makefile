@@ -30,7 +30,9 @@ HEADERS_FILES=\
 	cvector.h \
 	scop.h \
 	vector.h \
-	utils.h
+	utils.h \
+	stb_image_write.h \
+	stb_image.h
 #############################
 
 
@@ -51,7 +53,8 @@ SRCS_NOT_TEST = \
 	print.c \
 	run.c \
 	init.c \
-	utils.c
+	utils.c \
+	texture.c
 
 SRCS_FILES=$(SRCS_FOR_TEST) $(SRCS_NOT_TEST)
 #############################

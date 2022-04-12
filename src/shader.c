@@ -82,5 +82,7 @@ int compile_shaders(t_globals *g)
     glUseProgram(shader_program);
     g->gWVPLocation = glGetUniformLocation(shader_program, "gWVP");
     assert(g->gWVPLocation != 0xFFFFFFFF);
+    g->gSampler = glGetUniformLocation(shader_program, "gSampler");
+    assert(g->gSampler != 0xFFFFFFFF);
     return (0);
 }

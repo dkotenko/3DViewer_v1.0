@@ -38,7 +38,6 @@ void t_camera_handle_key(t_scop *scop,  t_camera *camera, int key)
     }
     t_vec3f temp;
     p = scop->g->p;
-
     switch (key) {
         case SDLK_RIGHT:
             temp = Cross(camera->Up, camera->Target);
@@ -87,7 +86,6 @@ void t_camera_handle_key(t_scop *scop,  t_camera *camera, int key)
         case SDLK_SPACE:
             set_rotateInfo(p, 0.0f, 0.0f, 0.0f);
             break ;
-
     };
 }
 
