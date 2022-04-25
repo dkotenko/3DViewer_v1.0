@@ -60,7 +60,6 @@ int run(t_scop *scop) {
   SDL_Event e = {0};
   SDL_StartTextInput();
   while (is_running) {
-    
     while (SDL_PollEvent(&e)) {
 
       if (e.key.keysym.sym == SDLK_ESCAPE) {

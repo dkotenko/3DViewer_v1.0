@@ -186,11 +186,14 @@ void populate_f(t_mesh *mesh)
                 vertex_to_add.texture.x = vertex_to_add.normal.x;
                 vertex_to_add.texture.y = vertex_to_add.normal.y;
             }
+            cvector_push_back(mesh->all_vertices, vertex_to_add.vertex);
+            cvector_push_back(mesh->all_textures, vertex_to_add.texture);
+            cvector_push_back(mesh->all_normals, vertex_to_add.normal);
             cvector_push_back(face.vertices, vertex_to_add);
             cvector_push_back(mesh->vertices_to_draw, vertex_to_add);
             cvector_push_back(mesh->indices_to_draw, t[i].indices[j].vertex);
-            cvector_push_back(mesh->indices_to_draw, t[i].indices[j].texture);
-            cvector_push_back(mesh->indices_to_draw, t[i].indices[j].normal);
+            //cvector_push_back(mesh->indices_to_draw, t[i].indices[j].texture);
+            //cvector_push_back(mesh->indices_to_draw, t[i].indices[j].normal);
 
         }
         cvector_push_back(mesh->faces, face);

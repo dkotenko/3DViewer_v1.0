@@ -32,6 +32,7 @@ int main(int ac, char **av)
     if (!run(&scop)) {
         printf("error during running, abort\n");
     }
+    
     exit(0);
     return (0);
 }

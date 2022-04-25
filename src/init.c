@@ -42,22 +42,6 @@ int initSDL(t_globals *g, t_config *config)
   return (1);
 }
 
-void init_gl_buffers(t_mesh *mesh)
-{
-    //NumIndices = Indices.size();
-    int vertices_size = cvector_size(mesh->vertices_to_draw);
-    
-    glGenBuffers(1, &mesh->VB);
-    glBindBuffer(GL_ARRAY_BUFFER, mesh->VB);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(t_vertex) * vertices_size, mesh->vertices_to_draw, GL_STATIC_DRAW);
-        
-    /*
-        glGenBuffers(1, &IB);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * NumIndices, &Indices[0], GL_STATIC_DRAW);
-    */
-}
-
 int initGL(t_scop *scop)
 {
     
@@ -72,7 +56,6 @@ int initGL(t_scop *scop)
     glFrontFace(GL_CW);
     glCullFace(GL_BACK);
     glEnable(GL_CULL_FACE);
-    init_gl_buffers(scop->mesh);
     
     if (compile_shaders(scop->g)) {
         fprintf(stderr, "%s\n", "Error during shader compiling");
@@ -103,7 +86,7 @@ void init_config(t_config *config)
 int init(t_scop *scop, char *filename)
 {
     t_mesh *mesh = scop->mesh;
-    load_mesh(mesh, filename);
+    
     
 
     init_config(scop->config);
@@ -119,7 +102,7 @@ int init(t_scop *scop, char *filename)
         printf( "Unable to initialize OpenGL!\n" );
         return 0;
     }
-    
+    load_mesh(mesh, filename);
     t_texture *t = t_texture_new(GL_TEXTURE_2D, scop->g->texture_filename);
     t_texture_load(t);
     mesh->texture = t;

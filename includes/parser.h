@@ -6,6 +6,18 @@
 #include <GL/freeglut.h>
 #include <stdio.h>
 
+#define BUFFERS_SIZE_IN_ELEMENTS 3
+
+enum BUFFER_TYPE {
+        INDEX_BUFFER,
+        POS_VB,
+        TEXCOORD_VB,
+        NORMAL_VB,
+        //WVP_MAT_VB   = 4,  // required only for instancing
+        //WORLD_MAT_VB = 5,  // required only for instancing
+        NUM_BUFFERS
+};
+
 typedef struct {
 	int vertex;
 	int texture;
@@ -47,12 +59,15 @@ typedef struct {
 	t_vec3f *vertices;
 	t_vec3f *normals;
 	t_vec2f *textures;
+	t_vec3f *all_vertices;
+	t_vec3f *all_normals;
+	t_vec2f *all_textures;
 	t_face *faces;
 	t_face_transport *faces_transport;
 	int material_index;
-	GLuint VB;
-    GLuint IB;
+	GLuint VAO;
 	t_texture *texture;
+	GLuint buffers[NUM_BUFFERS];
 } t_mesh;
 
 typedef struct {

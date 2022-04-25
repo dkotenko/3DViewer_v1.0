@@ -1,9 +1,12 @@
 #include "scop.h"
 #include "cvector.h"
 #include "parser.h"
+#include <GL/gl.h>
 
-#define _free(a) if (a) free(a);
-
+#define _free(a) if (a) free(a); a = NULL;
+#define POSITION_LOCATION  0
+#define TEX_COORD_LOCATION 1
+#define NORMAL_LOCATION    2
 
 void clear_mesh(t_mesh *mesh)
 {
@@ -11,6 +14,15 @@ void clear_mesh(t_mesh *mesh)
         _free(mesh->faces_transport[i].indices);
         _free(mesh->faces[i].vertices);
     }
+    if (mesh->buffers) {
+        glDeleteBuffers(BUFFERS_SIZE_IN_ELEMENTS, mesh->buffers);
+    }
+
+    if (mesh->VAO != 0) {
+        glDeleteVertexArrays(1, &mesh->VAO);
+        mesh->VAO = 0;
+    }
+    
 
     _free(mesh->faces);
     _free(mesh->faces_transport);
@@ -23,24 +35,20 @@ void clear_mesh(t_mesh *mesh)
 void draw_mesh(t_scop *scop)
 {
     t_mesh *mesh = scop->mesh;
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
-
-    glBindBuffer(GL_ARRAY_BUFFER, mesh->VB);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(t_vertex), 0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(t_vertex), (const GLvoid*)12);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(t_vertex), (const GLvoid*)20);
-    
-    t_texture_bind(mesh->texture, GL_TEXTURE0);
-    
+    glBindVertexArray(mesh->VAO);
     glDrawArrays(GL_TRIANGLES, 0, cvector_size(mesh->vertices_to_draw));
-    //glDrawElements(GL_TRIANGLES, cvector_size(mesh->vertices), GL_UNSIGNED_INT, 0);
-
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
-    glDisableVertexAttribArray(2);
-
+    
+    /*
+    glDrawElementsBaseVertex(GL_TRIANGLES,
+                                 cvector_size(mesh->indices_to_draw),
+                                 GL_UNSIGNED_INT,
+                                 (void*)(sizeof(unsigned int) * 1),
+                                 0);
+    */
+    //printf("%ld\n", cvector_size(mesh->indices_to_draw));
+    //glDrawElements( GL_TRIANGLES, cvector_size(mesh->indices_to_draw), GL_UNSIGNED_INT, 1 );
+    //glDrawArrays(GL_TRIANGLES, 0, 12);
+    glBindVertexArray(0);
     return ;
 }
 
@@ -71,15 +79,42 @@ void get_default_mesh(t_mesh *mesh)
     populate_f(mesh);
 }
 
+void populate_buffers(t_mesh *mesh)
+{
+    GLuint *m_Buffers = mesh->buffers;
+        
+    
+    
+    t_vec3f *v = mesh->all_vertices;
+    glBindBuffer(GL_ARRAY_BUFFER, m_Buffers[POS_VB]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(v[0]) * cvector_size(v), &v[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(POSITION_LOCATION);
+    glVertexAttribPointer(POSITION_LOCATION, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    
+    t_vec2f *m_TexCoords = mesh->all_textures;
+    glBindBuffer(GL_ARRAY_BUFFER, m_Buffers[TEXCOORD_VB]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(m_TexCoords[0]) * cvector_size(m_TexCoords), &m_TexCoords[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(TEX_COORD_LOCATION);
+    glVertexAttribPointer(TEX_COORD_LOCATION, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
+    t_vec3f *m_Normals = mesh->all_normals;
+    glBindBuffer(GL_ARRAY_BUFFER, m_Buffers[NORMAL_VB]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(m_Normals[0]) * cvector_size(m_Normals), &m_Normals[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(NORMAL_LOCATION);
+    glVertexAttribPointer(NORMAL_LOCATION, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    unsigned int *m_Indices = mesh->indices_to_draw;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Buffers[INDEX_BUFFER]);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(m_Indices[0]) * cvector_size(m_Indices), &m_Indices[0], GL_STATIC_DRAW);
+}
 
 bool load_mesh(t_mesh *mesh, char *filename)
 {
-    clear_mesh(mesh);
-
+    //clear_mesh(mesh); TODO
+    
     if (filename) {
         if (parse_file(filename, mesh) == EXIT_FAILURE) {
-            printf("parsing error\n");
+            printf("%s: parsing error\n", filename ? "basic mesh" : filename);
             return false;
         }
         //print_parse_result(&mesh);
@@ -87,6 +122,17 @@ bool load_mesh(t_mesh *mesh, char *filename)
         get_default_mesh(mesh);
     }
     
+    
+    
+    glGenVertexArrays(1, &mesh->VAO);
+    glBindVertexArray(mesh->VAO);
+    
+    glGenBuffers(BUFFERS_SIZE_IN_ELEMENTS, mesh->buffers);
+    populate_buffers(mesh);
+    printf("is error: %d\n", glGetError() == GL_NO_ERROR);
+    glBindVertexArray(0);
+
+
     return true;
 }
 
