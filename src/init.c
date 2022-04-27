@@ -2,8 +2,6 @@
 #include "cvector.h"
 #include <string.h>
 
-extern t_config *g_config;
-
 /*
 int initSDL(t_globals *g, t_config *config)
 {
@@ -68,6 +66,7 @@ int initGL(t_scop *scop)
     scop->g->gPersProjInfo.Width = scop->config->window_width;
     scop->g->gPersProjInfo.zNear = 1.0f;
     scop->g->gPersProjInfo.zFar = 100.0f;
+    
     return 1;
 }
 
@@ -109,7 +108,9 @@ int init(t_scop *scop, char *filename)
         printf( "Unable to initialize OpenGL!\n" );
         return 0;
     }
+    GLerror("before load mesh");
     load_mesh(mesh, filename);
+    GLerror("after load mesh");
     t_texture *t = t_texture_new(GL_TEXTURE_2D, scop->g->texture_filename);
     t_texture_load(t);
     mesh->texture = t;

@@ -75,6 +75,7 @@ typedef struct {
     GLuint gWVPLocation;
     GLuint gSampler;
     char *texture_filename;
+    char *filename;
 } t_globals;
 
 typedef struct {

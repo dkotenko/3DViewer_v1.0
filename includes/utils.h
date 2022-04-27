@@ -8,7 +8,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-
+#define GLerror(s) printf("openGL error code %s: %d\n", s, glGetError());
 
 /*
 ** UTILS

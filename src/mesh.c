@@ -128,7 +128,6 @@ bool load_mesh(t_mesh *mesh, char *filename)
     
     glGenBuffers(BUFFERS_SIZE_IN_ELEMENTS, mesh->buffers);
     populate_buffers(mesh);
-    printf("is error: %d\n", glGetError() == GL_NO_ERROR);
     glBindVertexArray(0);
 
 
