@@ -1,7 +1,6 @@
 #include "scop.h"
 #include "cvector.h"
 #include "parser.h"
-#include <GL/gl.h>
 
 #define _free(a) if (a) free(a); a = NULL;
 #define POSITION_LOCATION  0

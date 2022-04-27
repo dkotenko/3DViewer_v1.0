@@ -2,8 +2,8 @@
 #define PARSER_H
 
 #include "vector.h"
-#include <GL/glew.h>
-#include <GL/freeglut.h>
+//#include <GL/glew.h>
+//#include <GL/freeglut.h>
 #include <stdio.h>
 
 #define BUFFERS_SIZE_IN_ELEMENTS 3

@@ -1,6 +1,5 @@
 #include "utils.h"
 
-#define _POSIX_C_SOURCE  200809L
 #define _GNU_SOURCE
 
 
@@ -79,7 +78,7 @@ size_t	ft_strnlen(const char *s, size_t maxlen)
 
 int	handle_error(char *s)
 {
-	dprintf(STDERR_FILENO, "ERROR:\t%s\n", s);
+	printf("ERROR:\t%s\n", s);
 	exit(0);
 }
 

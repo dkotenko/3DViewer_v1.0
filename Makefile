@@ -41,7 +41,7 @@ HEADERS_FILES=\
 SRCS_DIR=src
 SRCS_FILES_FOR_TEST=
 SRCS_NOT_TEST = \
-	main.c \
+	glarea-example.c \
 	parser.c \
 	vector.c \
 	config.c \
@@ -51,10 +51,10 @@ SRCS_NOT_TEST = \
 	shader.c \
 	mesh.c \
 	print.c \
-	run.c \
 	init.c \
 	utils.c \
-	texture.c
+	texture.c # \
+	run.c \
 
 SRCS_FILES=$(SRCS_FOR_TEST) $(SRCS_NOT_TEST)
 #############################
@@ -84,12 +84,16 @@ REPORT_NAME=report.html
 
 
 FLAGS:=-lGLEW -lGLU -lGL -lglut
-FLAGS:=$(FLAGS) -pedantic `sdl2-config --libs` -lGL -lm -O3 -g 
+FLAGS:=$(FLAGS) -pedantic -lGL -lm -O3 -g 
 
 CC=gcc -std=c11 -Wall -Wextra -Werror
 CC_GCOV=gcc -Wall -Wextra -Werror -std=c11 \
 -fcf-protection=full -static-libgcc --coverage -lgcov
 THREADS = 8
+
+PKGCONFIG = $(shell which pkg-config)
+CFLAGS = $(shell $(PKGCONFIG) --cflags gtk+-3.0 epoxy)
+LIBS = $(shell $(PKGCONFIG) --libs gtk+-3.0 epoxy)
 
 export MESA_GL_VERSION_OVERRIDE=3.3
 
@@ -138,7 +142,7 @@ $(TEST_DIR)/%.o:$(TEST_DIR)/%.c $(TEST_INCLUDES)
 	$(CC) -I./$(TEST_DIR)/includes -I./includes -c $< -o $@
 
 $(NAME): $(OBJ)
-	$(CC) $(MATRIX_LIB_FILE) $(OBJ) $(FLAGS) -o $@ $(MATRIX_LIB)
+	$(CC) $(MATRIX_LIB_FILE) $(OBJ) $(FLAGS) -o $@ $(MATRIX_LIB) $(LIBS)
 	
 	@echo -n $(COLOR_GREEN)
 	@echo =================================
@@ -147,7 +151,7 @@ $(NAME): $(OBJ)
 	@echo -n $(COLOR_RESET)
 
 %.o:%.c $(HEADERS) $(MATRIX_LIB_HEADERS)
-	@$(CC) $(INCLUDES) $(MATRIX_LIB_INCLUDES) -c $< -o $@
+	@$(CC) $(CFLAGS) $(INCLUDES) $(MATRIX_LIB_INCLUDES) -c $< -o $@
 	@echo $<
 
 

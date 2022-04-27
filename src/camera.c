@@ -1,7 +1,6 @@
 #include "scop.h"
 #include "vector.h"
 #include <stdio.h>
-#include <GL/glew.h>
 #include <GL/freeglut.h>
 
 t_pipeline *p;
@@ -31,6 +30,7 @@ void t_camera_print(t_camera *camera)
     t_vec3f_print(camera->Up, "up");
 }
 
+/*
 void t_camera_handle_key(t_scop *scop,  t_camera *camera, int key)
 {
     if (key == -1) {
@@ -88,5 +88,6 @@ void t_camera_handle_key(t_scop *scop,  t_camera *camera, int key)
             break ;
     };
 }
+*/
 
 

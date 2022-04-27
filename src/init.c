@@ -4,6 +4,7 @@
 
 extern t_config *g_config;
 
+/*
 int initSDL(t_globals *g, t_config *config)
 {
   if(SDL_Init(SDL_INIT_EVERYTHING) < 0)
@@ -41,6 +42,7 @@ int initSDL(t_globals *g, t_config *config)
   }
   return (1);
 }
+*/
 
 int initGL(t_scop *scop)
 {
@@ -73,28 +75,33 @@ int initGL(t_scop *scop)
 void init_config(t_config *config)
 {
     //default values
+    
     config->window_width = 640;
     config->window_height = 480;
     config->debug = 0;
     config->window_start_x = 200;
     config->window_start_y = 100;
     config->app_name = ft_strdup("3DViewer_V1.0");
-
+    
     parse_config_file(config);
 }
 
 int init(t_scop *scop, char *filename)
 {
+    
     t_mesh *mesh = scop->mesh;
     
     
 
     init_config(scop->config);
-
+    
+    
+    /*
     if(!initSDL(scop->g, scop->config)) {
         printf( "Unable to initialize SDL!\n" );
         return 0;       
     }
+    */
     
     
     if(!initGL(scop))

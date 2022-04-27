@@ -22,10 +22,10 @@ static void add_shader(GLuint shader_program, const char* pShaderText, GLenum Sh
 
     glCompileShader(ShaderObj);
 
-    GLint success;
-    glGetShaderiv(ShaderObj, GL_COMPILE_STATUS, &success);
+    GLint Success_returned;
+    glGetShaderiv(ShaderObj, GL_COMPILE_STATUS, &Success_returned);
 
-    if (!success) {
+    if (!Success_returned) {
         GLchar InfoLog[1024];
         glGetShaderInfoLog(ShaderObj, 1024, NULL, InfoLog);
         fprintf(stderr, "Error compiling shader type %d: '%s'\n", ShaderType, InfoLog);
@@ -59,20 +59,20 @@ int compile_shaders(t_globals *g)
     };
     add_shader(shader_program, vs, GL_VERTEX_SHADER);
     add_shader(shader_program, fs, GL_FRAGMENT_SHADER);
-    GLint Success = 0;
+    GLint Success_returned = 0;
     GLchar ErrorLog[1024] = { 0 };
     
     glLinkProgram(shader_program);
-    glGetProgramiv(shader_program, GL_LINK_STATUS, &Success);
-    if (Success == 0) {
+    glGetProgramiv(shader_program, GL_LINK_STATUS, &Success_returned);
+    if (Success_returned == 0) {
         glGetProgramInfoLog(shader_program, sizeof(ErrorLog), NULL, ErrorLog);
         fprintf(stderr, "Error linking shader program: '%s'\n", ErrorLog);
         return (1);
     }
     
     glValidateProgram(shader_program);
-    glGetProgramiv(shader_program, GL_VALIDATE_STATUS, &Success);
-    if (!Success) {
+    glGetProgramiv(shader_program, GL_VALIDATE_STATUS, &Success_returned);
+    if (!Success_returned) {
         glGetProgramInfoLog(shader_program, sizeof(ErrorLog), NULL, ErrorLog);
         fprintf(stderr, "Invalid shader program: '%s'\n", ErrorLog);
         return (1);
