@@ -34,6 +34,7 @@ void clear_mesh(t_mesh *mesh)
 void draw_mesh(t_scop *scop)
 {
     t_mesh *mesh = scop->mesh;
+    
     glBindVertexArray(mesh->VAO);
     glDrawArrays(GL_TRIANGLES, 0, cvector_size(mesh->vertices_to_draw));
     

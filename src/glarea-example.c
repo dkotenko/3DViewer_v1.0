@@ -7,13 +7,14 @@
 
 #include <scop.h>
 
-static gboolean realise(GtkGLArea *area, GdkGLContext *context, gpointer data)
+static gboolean realise(GtkGLArea *area, gpointer *data)
 {
   t_scop *scop = (t_scop *)data;
-  (void)context;
+  
   gtk_gl_area_make_current(GTK_GL_AREA(area));
+  printf("%s\n",scop->g->filename);
   init(scop, scop->g->filename);
-  here();
+  
   
   if (gtk_gl_area_get_error (GTK_GL_AREA(area)) != NULL)
   {
@@ -21,40 +22,42 @@ static gboolean realise(GtkGLArea *area, GdkGLContext *context, gpointer data)
     return false;
   }
   
-  printf("%s\n", scop->g->filename);
-  exit(0);
-  
   
   //init all
   return true;
 }
 
-static gboolean render(GtkGLArea *area, GdkGLContext *context, gpointer data)
+static gboolean render(gpointer *data)
 {
   //render, obviously
-  (void)area;
-  (void)context;
+  //(void)area;
   t_scop *scop = (t_scop *)data;
+  
   draw_mesh(scop);
+  
   printf("%d\n",scop->g->gWVPLocation);
+  exit(0);
   return TRUE;
 }
 
-void init_scop(t_scop *scop, int argc, char **argv) {
-  scop = calloc(1, sizeof(t_scop));
+t_scop *create_scop(int argc, char **argv) {
+  t_scop *scop =  calloc(1, sizeof(t_scop));
   
-  scop->mesh = calloc(1, sizeof(t_mesh));
-  scop->g = calloc(1, sizeof(t_globals));
-  scop->g->filename = argc > 1 ? argv[1] : NULL;
+  scop->mesh = ft_memalloc(sizeof(t_mesh));
+  
+  scop->g = ft_memalloc(sizeof(t_globals));
+  
+  scop->g->filename = argc > 1 ? ft_strdup(argv[1]) : NULL;
+  
   scop->g->texture_filename = ft_strdup("resources/texture.jpg");
   scop->config = calloc(1, sizeof(t_config));
+  return scop;
 }
 
 int main(int argc, char** argv)
 { 
-  t_scop *scop = NULL;
-  init_scop(scop, argc, argv);
-  printf("%s\n", scop->g->filename);
+  t_scop *scop = create_scop(argc, argv);
+
   gtk_init(&argc, &argv);
   
   GtkWidget *window  = gtk_window_new(GTK_WINDOW_TOPLEVEL),
@@ -68,9 +71,8 @@ int main(int argc, char** argv)
   gtk_container_add(GTK_CONTAINER(window), gl_area);
   
   
-
-  gtk_widget_show_all(window);
   
+  gtk_widget_show_all(window);
   gtk_main();
 
   return 0;
