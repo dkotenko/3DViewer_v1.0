@@ -74,6 +74,7 @@ typedef struct {
     PersProjInfo gPersProjInfo;
     GLuint gWVPLocation;
     GLuint gSampler;
+    GLuint shader_program;
     char *texture_filename;
     char *filename;
 } t_globals;

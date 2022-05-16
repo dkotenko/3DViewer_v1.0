@@ -44,7 +44,6 @@ SRCS_NOT_TEST = \
 	glarea-example.c \
 	parser.c \
 	vector.c \
-	config.c \
 	camera.c \
 	math.c \
 	pipeline.c \

@@ -2,46 +2,6 @@
 #include "cvector.h"
 #include <string.h>
 
-/*
-int initSDL(t_globals *g, t_config *config)
-{
-  if(SDL_Init(SDL_INIT_EVERYTHING) < 0)
-  {
-    printf( "SDL could not initialize! SDL Error: %s\n", SDL_GetError() );
-    return 0;
-  }
-  
-  g->gWindow = SDL_CreateWindow( \
-    config->app_name, \
-    config->window_start_x, \
-    config->window_start_y, \
-    config->window_width, \
-    config->window_height, \
-     SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
-  if( g->gWindow == NULL )
-  {
-    printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
-    return (0);
-  }
-
-  g->gContext = SDL_GL_CreateContext(g->gWindow);
-  if( g->gContext == NULL )
-  {
-    printf( "OpenGL context could not be created! SDL Error: %s\n", SDL_GetError() );
-    return 0;
-  }
-  g->state = SDL_GetKeyboardState(NULL);
-  glewExperimental = GL_TRUE; 
-  GLenum glewError = glewInit();
-  if( glewError != GLEW_OK )
-  {
-    printf( "Error initializing GLEW! %s\n", glewGetErrorString( glewError ) );
-    return 0;
-  }
-  return (1);
-}
-*/
-
 int initGL(t_scop *scop)
 {
     
@@ -52,10 +12,9 @@ int initGL(t_scop *scop)
     
     
     //51,76,76,255 - cadetblue / orange
-    glClearColor(51.0f / 256.0f, 76.0f/256.0f, 76.0f/256.0f, 1.0f);
-    glFrontFace(GL_CW);
-    glCullFace(GL_BACK);
-    glEnable(GL_CULL_FACE);
+    //glFrontFace(GL_CW);
+    //glCullFace(GL_BACK);
+    //glEnable(GL_CULL_FACE);
     
     if (compile_shaders(scop->g)) {
         fprintf(stderr, "%s\n", "Error during shader compiling");
@@ -87,22 +46,9 @@ void init_config(t_config *config)
 
 int init(t_scop *scop, char *filename)
 {
-    
     t_mesh *mesh = scop->mesh;
-    
-    
 
     init_config(scop->config);
-    
-    
-    /*
-    if(!initSDL(scop->g, scop->config)) {
-        printf( "Unable to initialize SDL!\n" );
-        return 0;       
-    }
-    */
-    
-    
     if(!initGL(scop))
     {
         printf( "Unable to initialize OpenGL!\n" );

@@ -9,10 +9,10 @@
 #define BUFFERS_SIZE_IN_ELEMENTS 3
 
 enum BUFFER_TYPE {
-        INDEX_BUFFER,
         POS_VB,
         TEXCOORD_VB,
-        NORMAL_VB,
+        //INDEX_BUFFER,
+        //NORMAL_VB,
         //WVP_MAT_VB   = 4,  // required only for instancing
         //WORLD_MAT_VB = 5,  // required only for instancing
         NUM_BUFFERS
