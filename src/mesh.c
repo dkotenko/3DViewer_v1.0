@@ -35,6 +35,10 @@ void draw_mesh(t_scop *scop)
 {
     t_mesh *mesh = scop->mesh;
 
+    glFrontFace(GL_CW);
+    glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
+
     glUseProgram (scop->g->shader_program);
     glBindVertexArray(mesh->VAO);
 

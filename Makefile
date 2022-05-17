@@ -91,8 +91,8 @@ CC_GCOV=gcc -Wall -Wextra -Werror -std=c11 \
 THREADS = 8
 
 PKGCONFIG = $(shell which pkg-config)
-CFLAGS = $(shell $(PKGCONFIG) --cflags gtk+-3.0 epoxy)
-LIBS = $(shell $(PKGCONFIG) --libs gtk+-3.0 epoxy)
+CFLAGS = $(shell $(PKGCONFIG) --cflags gtk+-3.0 epoxy glib-2.0)
+LIBS = $(shell $(PKGCONFIG) --libs gtk+-3.0 epoxy glib-2.0)
 
 export MESA_GL_VERSION_OVERRIDE=3.3
 

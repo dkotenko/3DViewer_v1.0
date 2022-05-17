@@ -12,9 +12,12 @@ int initGL(t_scop *scop)
     
     
     //51,76,76,255 - cadetblue / orange
-    //glFrontFace(GL_CW);
-    //glCullFace(GL_BACK);
-    //glEnable(GL_CULL_FACE);
+    glFrontFace(GL_CW);
+    glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
+    //glEnable(GL_MULTISAMPLE);
+	//glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_BLEND);
     
     if (compile_shaders(scop->g)) {
         fprintf(stderr, "%s\n", "Error during shader compiling");
