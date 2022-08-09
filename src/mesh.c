@@ -32,8 +32,8 @@ void draw_mesh(t_scop *scop)
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(t_vertex), (const GLvoid*)12);
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(t_vertex), (const GLvoid*)20);
     
-    t_texture_bind(mesh->texture, GL_TEXTURE0);
     
+    t_texture_bind(mesh->texture, GL_TEXTURE0);
     glDrawArrays(GL_TRIANGLES, 0, cvector_size(mesh->vertices_to_draw));
     //glDrawElements(GL_TRIANGLES, cvector_size(mesh->vertices), GL_UNSIGNED_INT, 0);
 
@@ -86,7 +86,6 @@ bool load_mesh(t_mesh *mesh, char *filename)
     } else {
         get_default_mesh(mesh);
     }
-    
     return true;
 }
 

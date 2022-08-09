@@ -55,23 +55,47 @@ typedef struct {
 	t_texture *texture;
 } t_mesh;
 
-typedef struct {
-} t_mesh_transport;
-
-typedef struct s_object_node{
+typedef struct s_scene_node{
 	struct s_object_node *children;
-	int *m111eshes_indexes;
-} t_obj_node;
+	int *meshes_indexes;
+} t_scene_node;
 
 typedef struct {
-	int (*f)(void);
+	char	*name;
+	t_texture	texture;
+	t_vec3f		ambient;
+	t_vec3f		diffuse;
+	t_vec3f		specular;
+	float		specular_exponent;
+	float		alpha;
 } t_material;
 
 typedef struct {
-	t_obj_node *root_node;
-	t_mesh *m111eshes;
+	t_vec3f	pos;
+	float	scale;
+	matrix_t	rotation;
+	matrix_t	transformation;
+	t_vec3f		min;
+	t_vec3f		max;
+	t_vec3f		size;
+	t_vec3f		center;
+} t_model_data;
+
+typedef struct {
+	t_scene_node *root_node;
+	t_mesh *meshes;
 	t_material *materials;
-} t_obj;
+	t_model_data	*d;
+	int	mod_from;
+	int	mod_to;
+	float	mod_transition;
+} t_model;
+
+typedef struct s_scene {
+	t_scene_node	*root_node;
+	t_mesh			*meshes;
+	t_material		*materials;
+} t_scene;
 
 int parse_file(char *filename, t_mesh *mesh);
 void get_default_mesh(t_mesh *mesh);

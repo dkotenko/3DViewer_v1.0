@@ -197,6 +197,26 @@ void populate_f(t_mesh *mesh)
     }
 }
 
+void    parse_usemtl(char *s, t_mesh *mesh) {
+    (void)s;
+    (void)mesh;
+}
+
+void    parse_newmtl(char *s, t_mesh *mesh) {
+    (void)s;
+    (void)mesh;
+}
+
+void    parse_mtllib(char *s, t_mesh *mesh) {
+    (void)s;
+    (void)mesh;
+}
+
+void    parse_material(char *s, t_mesh *mesh) {
+    (void)s;
+    (void)mesh;
+}
+
 int parse_content(char *s, t_mesh *mesh)
 {
     if (!strncmp("vt ", s, 3)) {
@@ -207,6 +227,12 @@ int parse_content(char *s, t_mesh *mesh)
         parse_v(s, mesh);
     } else if (!strncmp("f ", s, 2)) {
         parse_f(s, mesh);
+    } else if (!strncmp("usemtl", s, strlen("usemtl"))) {
+        parse_usemtl(s, mesh);
+    } else if (!strncmp("mtllib", s, strlen("mtllib"))) {
+        parse_mtllib(s, mesh);
+    } else if (!strncmp("newmtl", s, strlen("newmtl"))) {
+        parse_newmtl(s, mesh);
     }
     return 1;
 }
@@ -343,10 +369,6 @@ int parse_config_file(t_config *config)
     fclose(fp);
     return 0;
 }
-
-#include "scop.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 char *read_file(char *filename)
 {

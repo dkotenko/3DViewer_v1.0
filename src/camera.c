@@ -39,22 +39,34 @@ void t_camera_handle_key(t_scop *scop,  t_camera *camera, int key)
     t_vec3f temp;
     p = scop->g->p;
     switch (key) {
+        case SDLK_e:
+            temp = t_vec3f_multf(camera->Up, STEP_SCALE);
+            camera->Pos = t_vec3f_sub(camera->Pos, temp);
+            break ;
+        case SDLK_q:
+            temp = t_vec3f_multf(camera->Up, STEP_SCALE);
+            camera->Pos = t_vec3f_sum(camera->Pos, temp);
+            break ;
+        case SDLK_d:
         case SDLK_RIGHT:
             temp = Cross(camera->Up, camera->Target);
             temp = Normalize(temp);
             temp = t_vec3f_multf(temp, STEP_SCALE);
             camera->Pos = t_vec3f_sum(camera->Pos, temp);
             break ;
+        case SDLK_a:
         case SDLK_LEFT:
             temp =  Cross(camera->Target, camera->Up);
             temp = Normalize(temp);
             temp = t_vec3f_multf(temp, STEP_SCALE);
             camera->Pos = t_vec3f_sum(camera->Pos, temp);
             break ;
+        case SDLK_w:
         case SDLK_UP: 
             temp = t_vec3f_multf(camera->Target, STEP_SCALE);
             camera->Pos = t_vec3f_sum(camera->Pos, temp);
             break ;
+        case SDLK_s:
         case SDLK_DOWN:
             temp = t_vec3f_multf(camera->Target, STEP_SCALE);
             camera->Pos = t_vec3f_sub(camera->Pos, temp);

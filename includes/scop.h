@@ -7,8 +7,6 @@
 #include "vector.h"
 #include "s21_matrix.h"
 #include "parser.h"
-#include "microui.h"
-#include "renderer.h"
 #include "utils.h"
 
 #define here() printf("HERE\n");
@@ -73,7 +71,6 @@ typedef struct {
     GLuint gWVPLocation;
     GLuint gSampler;
     const Uint8	*state;
-    mu_Context *mui_ctx;
     char *texture_filename;
 } t_globals;
 
@@ -167,8 +164,6 @@ bool load_mesh(t_mesh *mesh, char *filename);
 **
 */
 int run(t_scop *scop);
-int text_height(mu_Font font);
-int text_width(mu_Font font, char *text, int len);
 
 /*
 ** texture.c

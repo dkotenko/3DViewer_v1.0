@@ -1,5 +1,4 @@
 #include "scop.h"
-#include "microui.h"
 
 bool is_running;
 
@@ -28,7 +27,19 @@ void handleKeys(t_scop *scop)
         key = SDLK_HOME;
     } else if (s[SDL_SCANCODE_END]) {
         key = SDLK_END;
-    }
+    } else if (s[SDL_SCANCODE_Q]) {
+        key = SDLK_q;
+    } else if (s[SDL_SCANCODE_W]) {
+        key = SDLK_w;
+    } else if (s[SDL_SCANCODE_E]) {
+        key = SDLK_e;
+    } else if (s[SDL_SCANCODE_A]) {
+        key = SDLK_a;
+    } else if (s[SDL_SCANCODE_S]) {
+        key = SDLK_s;
+    } else if (s[SDL_SCANCODE_D]) {
+        key = SDLK_d;
+    } 
     t_camera_handle_key(scop, scop->g->pGameCamera, key);
 }
 
