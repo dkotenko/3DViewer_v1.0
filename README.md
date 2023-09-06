@@ -1,4 +1,4 @@
-# scop
+# 3DViewer_v1.0
 3D .obj file visualizer
 
 **if "GLSL 3.30 is not supported" error occurs:**
